@@ -10,41 +10,41 @@ class trajectoryObject {
         HIDE_CURSOR();
         self.pos = {x: e.clientX, y: e.clientY};
         self.startDraw();
-    };
+    }
 
     recordRecognition() {//xxx: should we save their first choices or last choices
         SHOW_RECOGNITION_NEXT_BUT();
-        var instrChoice = $("input[name='recognition']:checked").val();
+        var instrChoice = $('input[name="recognition"]:checked').val();
         if(instrChoice != undefined)
             self.recognition = instrChoice;
     }
 
     triggerDiskMove(type) {
-        if(type == "physical") {
-            if (self.pos.x >= ($("#disk").offset().left - PHYSICAL_TRIGGER_DIST)) {
+        if(type == 'physical') {
+            if (self.pos.x >= ($('#disk').offset().left - PHYSICAL_TRIGGER_DIST)) {
                 cancelAnimationFrame(globalID);
-                $(document).off("mousemove");
+                $(document).off('mousemove');
                 SHOW_CURSOR();
                 MOVE_DISK();
                 setTimeout(SHOW_TRACING_NEXT_BUT, 1000);
-                $("#recognition").change(self.recordRecognition);
+                $('#recognition').change(self.recordRecognition);
             }
-        } else if (type == "social") {
-            if (self.pos.x >= ($("#disk").offset().left - SOCIAL_TRIGGER_DIST)) {
+        } else if (type == 'social') {
+            if (self.pos.x >= ($('#disk').offset().left - SOCIAL_TRIGGER_DIST)) {
                 cancelAnimationFrame(globalID);
-                $(document).off("mousemove");
+                $(document).off('mousemove');
                 SHOW_CURSOR();
                 MOVE_DISK();
                 setTimeout(SHOW_TRACING_NEXT_BUT, 1000);
-                $("#recognition").change(self.recordRecognition);
+                $('#recognition').change(self.recordRecognition);
             }
         } else {
-            if (self.pos.x >= ($("#disk").offset().left - PHYSICAL_TRIGGER_DIST)) {
+            if (self.pos.x >= ($('#disk').offset().left - PHYSICAL_TRIGGER_DIST)) {
                 cancelAnimationFrame(globalID);
-                $(document).off("mousemove");
+                $(document).off('mousemove');
                 SHOW_CURSOR();
                 SHOW_TRACING_NEXT_BUT();
-                $("#recognition").change(self.recordRecognition);
+                $('#recognition').change(self.recordRecognition);
             }
         }
     }
@@ -74,7 +74,7 @@ class otherTrajectoryObject extends trajectoryObject{
 
         self.triggerDiskMove(self.triggerType);
         globalID = requestAnimationFrame(self.draw);
-    };
+    }
 
     updatePos() {
         var x_vector = self.destination.x - self.pos.x;
@@ -133,4 +133,3 @@ class selfTrajectoryObject extends trajectoryObject{
     }
 
 }
-

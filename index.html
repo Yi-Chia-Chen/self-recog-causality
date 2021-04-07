@@ -9,24 +9,24 @@
     <link rel='stylesheet' href='style.css' />
 </head>
 <body>
-    <div id="intro">Welcome to the experiment!</div>
-    <div id="tracing">
-        <div id="start"></div>
-        <div id="line">
-            <img src="line_thick.png">
-        </div>
-        <div id="disk"></div>
+    <div id='intro'>Welcome to the experiment!</div>
+    <div id='tracing'>
+        <div id='start'></div>
+        <div id='disk'></div>
     </div>
-    <div id="tracingNextBut" onclick="SHOW_RECOGNITION_TASK()">NEXT</div>
-    <dic id="recognition">
+    <canvas id='canvas' width='200' height='100'>
+        CanvasError: Please contact the experimenter at yichiachen@g.ucla.edu with the code CanvasError in your message to receive your credit.
+    </canvas>
+    <div id='tracingNextBut' onclick='SHOW_RECOGNITION_TASK()'>NEXT</div>
+    <dic id='recognition'>
         <p>Was the red line you saw earlier showing your cursor movements or from one of our previous participants?</p>
-        <label><div class="option"><input class="optionRadio" type="radio" name="recognition" value="self"><div class="optionText">My cursor movements</div></div></label>
-        <label><div class="option"><input class="optionRadio" type="radio" name="recognition" value="other"><div class="optionText">A previous participant's cursor movements</div></div></label>
+        <label><div class='option'><input class='optionRadio' type='radio' name='recognition' value='self'><div class='optionText'>My cursor movements</div></div></label>
+        <label><div class='option'><input class='optionRadio' type='radio' name='recognition' value='other'><div class='optionText'>A previous participant's cursor movements</div></div></label>
     </dic>
-    <div id="recognitionNextBut" onclick="START_TRIAL()">NEXT</div>
+    <div id='recognitionNextBut' onclick='START_TRIAL()'>NEXT</div>
 
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
-    <script src="agent.js"></script>
-    <script src="interface.js"></script>
-    <script src="main.js"></script>
+    <script src='agent.js'></script>
+    <script src='interface.js'></script>
+    <script src='main.js'></script>
 </body>

@@ -10,6 +10,11 @@ body {
     font-display: swap;
 }
 
+#canvas {
+    background-image: url('line_thick_new.png');
+    border: 10px solid black;
+}
+
 #tracing {
     display:none;
     position: absolute;
