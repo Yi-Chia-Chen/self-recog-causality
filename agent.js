@@ -8,11 +8,12 @@ class trajectoryObject {
         self.startTime = Date.now();
         START_BUT_DISAPPEAR();
         HIDE_CURSOR();
-        self.pos = {x: e.clientX, y: e.clientY};
+        self.pos = {x: e.offsetX, y: e.offsetY};
+        console.log(self.pos);
         self.startDraw();
-    }
+    };
 
-    recordRecognition() {//xxx: should we save their first choices or last choices
+    recordRecognition() {
         SHOW_RECOGNITION_NEXT_BUT();
         var instrChoice = $('input[name="recognition"]:checked').val();
         if(instrChoice != undefined)
@@ -21,7 +22,7 @@ class trajectoryObject {
 
     triggerDiskMove(type) {
         if(type == 'physical') {
-            if (self.pos.x >= ($('#disk').offset().left - PHYSICAL_TRIGGER_DIST)) {
+            if (self.pos.x >= ($('#disk').position().left - PHYSICAL_TRIGGER_DIST)) {
                 cancelAnimationFrame(globalID);
                 $(document).off('mousemove');
                 SHOW_CURSOR();
@@ -30,7 +31,7 @@ class trajectoryObject {
                 $('#recognition').change(self.recordRecognition);
             }
         } else if (type == 'social') {
-            if (self.pos.x >= ($('#disk').offset().left - SOCIAL_TRIGGER_DIST)) {
+            if (self.pos.x >= ($('#disk').position().left - SOCIAL_TRIGGER_DIST)) {
                 cancelAnimationFrame(globalID);
                 $(document).off('mousemove');
                 SHOW_CURSOR();
@@ -39,7 +40,7 @@ class trajectoryObject {
                 $('#recognition').change(self.recordRecognition);
             }
         } else {
-            if (self.pos.x >= ($('#disk').offset().left - PHYSICAL_TRIGGER_DIST)) {
+            if (self.pos.x >= ($('#disk').position().left - PHYSICAL_TRIGGER_DIST)) {
                 cancelAnimationFrame(globalID);
                 $(document).off('mousemove');
                 SHOW_CURSOR();
@@ -100,8 +101,8 @@ class otherTrajectoryObject extends trajectoryObject{
 class selfTrajectoryObject extends trajectoryObject{
     constructor(triggerType) {
         super(triggerType);
+        this.selfTrajectory = {};
     }
-    selfTrajectory = [];
 
     startDraw() {
         $(document).mousemove(self.draw);
@@ -113,7 +114,7 @@ class selfTrajectoryObject extends trajectoryObject{
         ctx.moveTo(self.pos.x, self.pos.y);
         var currentTime = Date.now();
         var timeStamp = (currentTime - self.startTime)/1000;
-        self.record(timeStamp, self.pos)
+        self.record(timeStamp, {x: self.pos.x, y: self.pos.y});
         self.updatePos(e);
         ctx.lineTo(self.pos.x, self.pos.y);
 
@@ -122,14 +123,12 @@ class selfTrajectoryObject extends trajectoryObject{
     }
 
     updatePos(e) {
-        self.pos.x = e.clientX;
-        self.pos.y = e.clientY;
+        self.pos.x = e.offsetX;
+        self.pos.y = e.offsetY;
     }
 
-    record(timeStamp, pos) {//xxx: why does it only save the last coordinates in this.selfTrajectory?
-        console.log(pos);
+    record(timeStamp, pos) {
         this.selfTrajectory[timeStamp] = pos;
-        console.log(this.selfTrajectory);
     }
 
 }

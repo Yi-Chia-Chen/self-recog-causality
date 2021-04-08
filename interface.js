@@ -1,26 +1,29 @@
-const LINE_LENGTH = 300;
-const LINE_HEIGHT = 66.641; //read from console
+const TRACING_CANVAS_WIDTH = 600;
+const TRACING_CANVAS_HEIGHT = 600;
 const DISK_SIZE = 40;
 const START_BUT_SIZE = 10;
 
 function SETUP_TRACING_INTERFACE() {
-    $('#tracing').css('transform', 'translateY(-' + LINE_HEIGHT / 2 + 'px');
-    $('#line img').css('width', LINE_LENGTH + 'px');
-    $('#disk').css({'display': 'block',
-                    'width': DISK_SIZE + 'px',
-                    'height': DISK_SIZE + 'px',
-                'transform': 'translate(' + LINE_LENGTH / 2 + 'px, ' + (LINE_HEIGHT - DISK_SIZE / 2) + 'px)'});
-
-    $('#start').css({'display': 'block',
-                    'width': START_BUT_SIZE + 'px',
-                    'height': START_BUT_SIZE + 'px',
-                    'transform': 'translate(-' + (LINE_LENGTH + START_BUT_SIZE) / 2 + 'px, ' + (LINE_HEIGHT - START_BUT_SIZE / 2) + 'px)'});
+    $("#tracing").css({"height": TRACING_CANVAS_HEIGHT + "px",
+                    "width": TRACING_CANVAS_WIDTH + "px",});
+    $("#disk").css({"display": "block",
+                    "width": DISK_SIZE + "px",
+                    "height": DISK_SIZE + "px",
+                     "left": "500px",
+                     "top": (350 - DISK_SIZE / 2) + "px"});
+    $("#start").css({"display": "block",
+                    "width": START_BUT_SIZE + "px",
+                    "height": START_BUT_SIZE + "px",
+                    "left": (100 - START_BUT_SIZE / 2) + "px",
+                    "top": (350 - START_BUT_SIZE / 2) + "px"});
 }
 
 function SETUP_TRACING_CANVAS() {
-    var ctx = $('#canvas').getContext('2d');
-    ctx.canvas.width = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
+    //var ctx = $('#canvas').getContext('2d');
+    canvas = document.getElementById("canvas");
+    ctx = canvas.getContext('2d');
+    ctx.canvas.width = TRACING_CANVAS_WIDTH;
+    ctx.canvas.height = TRACING_CANVAS_HEIGHT;
     ctx.lineWidth = 2;
     ctx.lineCap = 'round';
     ctx.strokeStyle = 'red';
@@ -31,7 +34,7 @@ function START_BUT_DISAPPEAR() {
 }
 
 function MOVE_DISK(){
-    $('#disk').css({'transform': 'translate(' + (LINE_LENGTH / 2 + 1000) + 'px, ' + (LINE_HEIGHT - DISK_SIZE / 2) + 'px)',
+    $('#disk').css({'transform': 'translateX(100px)',
                     'transition': DISK_SPEED + 's'});
 }
 
@@ -72,6 +75,7 @@ function SHOW_RECOGNITION_TASK() {
     $('#tracing').hide();
     $('#tracingNextBut').hide();
     RESET_CANVAS()
+    $('#disk').css('transform', 'translateX(0px)');
     $('#recognition').show();
 }
 
