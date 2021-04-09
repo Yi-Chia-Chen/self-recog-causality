@@ -77,6 +77,7 @@ function SHOW_RECOGNITION_TASK() {
     RESET_CANVAS()
     $('#disk').css('transform', 'translateX(0px)');
     $('#recognition').show();
+    $('#start').off('click');
 }
 
 function RESET_CANVAS() {

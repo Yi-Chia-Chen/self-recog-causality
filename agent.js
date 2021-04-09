@@ -65,18 +65,10 @@ class otherTrajectoryObject extends trajectoryObject{
         super(triggerType);
         this.index = 0;
         this.time_elapsed = Object.keys(OTHER_TRAJECTORY)[0];
-        this.started = false;
-        this.startMouseMoveSec = 0;
     }
 
     startDraw() {
         $(document).mousemove(REQUEST_TIMEOUT(self.draw, self.time_elapsed));
-    }
-
-    allowDraw() {
-        self.startMouseMoveSec += 1;
-        REQUEST_TIMEOUT(self.draw, self.time_elapsed);
-        console.log(self.startMouseMoveSec);
     }
 
     draw() {
@@ -91,7 +83,6 @@ class otherTrajectoryObject extends trajectoryObject{
             self.triggerDiskMove(self.triggerType);
             self.time_elapsed = Object.keys(OTHER_TRAJECTORY)[self.index] - Object.keys(OTHER_TRAJECTORY)[self.index-1];
             REQUEST_TIMEOUT(self.draw, self.time_elapsed);
-
         }
     }
 
