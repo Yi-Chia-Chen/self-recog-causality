@@ -1,6 +1,7 @@
 class trajectoryObject {
     constructor(triggerType) {
         this.triggerType = triggerType;
+        this.allowDraw = true;
         self = this;
     }
 
@@ -8,8 +9,7 @@ class trajectoryObject {
         self.startTime = Date.now();
         START_BUT_DISAPPEAR();
         HIDE_CURSOR();
-        self.pos = {x: e.offsetX, y: e.offsetY};
-        console.log(self.pos);
+        self.pos = {x: e.offsetX - $('#canvas').offset().left, y: e.offsetY - $('#canvas').offset().top};
         self.startDraw();
     };
 
@@ -23,8 +23,8 @@ class trajectoryObject {
     triggerDiskMove(type) {
         if(type == 'physical') {
             if (self.pos.x >= ($('#disk').position().left - PHYSICAL_TRIGGER_DIST)) {
-                cancelAnimationFrame(globalID);
                 $(document).off('mousemove');
+                self.allowDraw = false;
                 SHOW_CURSOR();
                 MOVE_DISK();
                 setTimeout(SHOW_TRACING_NEXT_BUT, 1000);
@@ -32,17 +32,17 @@ class trajectoryObject {
             }
         } else if (type == 'social') {
             if (self.pos.x >= ($('#disk').position().left - SOCIAL_TRIGGER_DIST)) {
-                cancelAnimationFrame(globalID);
                 $(document).off('mousemove');
+                self.allowDraw = false;
                 SHOW_CURSOR();
                 MOVE_DISK();
                 setTimeout(SHOW_TRACING_NEXT_BUT, 1000);
                 $('#recognition').change(self.recordRecognition);
             }
         } else {
-            if (self.pos.x >= ($('#disk').position().left - PHYSICAL_TRIGGER_DIST)) {
-                cancelAnimationFrame(globalID);
+            if (self.pos.x >= ($('#disk').position().left - NO_TRIGGER_DIST)) {
                 $(document).off('mousemove');
+                self.allowDraw = false;
                 SHOW_CURSOR();
                 SHOW_TRACING_NEXT_BUT();
                 $('#recognition').change(self.recordRecognition);
@@ -50,53 +50,68 @@ class trajectoryObject {
         }
     }
 }
+/*
+    ####### ####### #     # ####### ######
+    #     #    #    #     # #       #     #
+    #     #    #    #     # #       #     #
+    #     #    #    ####### #####   ######
+    #     #    #    #     # #       #   #
+    #     #    #    #     # #       #    #
+    #######    #    #     # ####### #     #
 
+ */
 class otherTrajectoryObject extends trajectoryObject{
     constructor(triggerType) {
         super(triggerType);
         this.index = 0;
-        this.time_elapsed = Object.keys(OTHER_TRAJECTORY)[this.index + 1] - Object.keys(OTHER_TRAJECTORY)[this.index];
-        this.destination = Object.values(OTHER_TRAJECTORY)[0];
-        this.now_portion = 1;
+        this.time_elapsed = Object.keys(OTHER_TRAJECTORY)[0];
+        this.started = false;
+        this.startMouseMoveSec = 0;
     }
 
-
     startDraw() {
-        $(document).mousemove(function(){globalID = requestAnimationFrame(self.draw)});
+        $(document).mousemove(REQUEST_TIMEOUT(self.draw, self.time_elapsed));
+    }
+
+    allowDraw() {
+        self.startMouseMoveSec += 1;
+        REQUEST_TIMEOUT(self.draw, self.time_elapsed);
+        console.log(self.startMouseMoveSec);
     }
 
     draw() {
-        ctx.beginPath();
+        if(self.allowDraw) {
+            ctx.beginPath();
 
-        ctx.moveTo(self.pos.x, self.pos.y);
-        self.updatePos();
-        ctx.lineTo(self.pos.x, self.pos.y);
-        ctx.stroke();
+            ctx.moveTo(self.pos.x, self.pos.y);
+            self.updatePos();
+            ctx.lineTo(self.pos.x, self.pos.y);
+            ctx.stroke();
 
-        self.triggerDiskMove(self.triggerType);
-        globalID = requestAnimationFrame(self.draw);
+            self.triggerDiskMove(self.triggerType);
+            self.time_elapsed = Object.keys(OTHER_TRAJECTORY)[self.index] - Object.keys(OTHER_TRAJECTORY)[self.index-1];
+            REQUEST_TIMEOUT(self.draw, self.time_elapsed);
+
+        }
     }
 
     updatePos() {
-        var x_vector = self.destination.x - self.pos.x;
-        var y_vector = self.destination.y - self.pos.y;
-        var now_dist = VECTOR_LENGTH(x_vector, y_vector);
-        if (now_dist > Math.sqrt(1,1)){
-            self.pos.x += x_vector * self.now_portion;
-            self.pos.y += y_vector * self.now_portion;
-        } else {
-            self.time_elapsed = Object.keys(OTHER_TRAJECTORY)[self.index + 1] - Object.keys(OTHER_TRAJECTORY)[self.index];
-            x_vector = Object.values(OTHER_TRAJECTORY)[self.index + 1].x - Object.values(OTHER_TRAJECTORY)[self.index].x;
-            y_vector = Object.values(OTHER_TRAJECTORY)[self.index + 1].y - Object.values(OTHER_TRAJECTORY)[self.index].y;
-            var now_destination_dist = VECTOR_LENGTH(x_vector, y_vector);
-            var now_step_size = OTHER_TRAJECTORY_SPEED * self.time_elapsed;
-            self.now_portion = Math.min(now_step_size / now_destination_dist, 1);
-            self.index += 1;
-            self.destination = Object.values(OTHER_TRAJECTORY)[self.index];
-        }
+        self.pos = Object.values(OTHER_TRAJECTORY)[self.index];
+        self.index += 1;
     }
+
 }
 
+/*
+  #####  ####### #       #######
+ #     # #       #       #
+ #       #       #       #
+  #####  #####   #       #####
+       # #       #       #
+ #     # #       #       #
+  #####  ####### ####### #
+
+*/
 
 class selfTrajectoryObject extends trajectoryObject{
     constructor(triggerType) {
@@ -129,6 +144,46 @@ class selfTrajectoryObject extends trajectoryObject{
 
     record(timeStamp, pos) {
         this.selfTrajectory[timeStamp] = pos;
+        console.log(this.selfTrajectory);
     }
 
+}
+
+
+/*
+ ####### #     # #     #  #####
+ #       #     # ##    # #     #
+ #       #     # # #   # #
+ #####   #     # #  #  # #
+ #       #     # #   # # #
+ #       #     # #    ## #     #
+ #        #####  #     #  #####
+
+*/
+
+function REQUEST_TIMEOUT(to_do, delay) {
+    const START_TIME = Date.now();
+    function loop() {
+        const TIME_ELAPSED = (Date.now() - START_TIME) / 1000;
+        if (TIME_ELAPSED >= delay) {
+            to_do();
+        } else {
+            request_id = requestAnimationFrame(loop);
+            REGISTER_CANCEL_FUNCTION(function() {cancelAnimationFrame(request_id)});
+        }
+    }
+    var request_id = requestAnimationFrame(loop);
+    REGISTER_CANCEL_FUNCTION(function() {cancelAnimationFrame(request_id)});
+}
+
+function REQUEST_CANCEL() {
+    // register automatically
+}
+
+function REGISTER_CANCEL_FUNCTION (func) {
+    REQUEST_CANCEL = func;
+}
+
+function VECTOR_LENGTH(x_diff, y_diff) {
+    return Math.sqrt(Math.pow(x_diff, 2) + Math.pow(y_diff, 2));
 }
