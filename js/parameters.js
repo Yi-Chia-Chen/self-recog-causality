@@ -50,10 +50,10 @@ const ORIENTATIONS = RANGE(0, 360, 20);
 const PRACTICE_ORIENTATION_DICT = {'static': 200, 'physical': 60, 'social': 280};
 const TRACE_DICT = {};
 // from trace_[traceKey].js (total 3 x 18 files):
-// TRACE['static_000'] = [ [time1, {'x':posX, 'y':posY}], [time2, {'x':posX, 'y':posY}], ...... ];
-// TRACE['physical_000'] = [ [time1, {'x':posX, 'y':posY}], [time2, {'x':posX, 'y':posY}], ...... ];
-// TRACE['social_000'] = [ [time1, {'x':posX, 'y':posY}], [time2, {'x':posX, 'y':posY}], ...... ];
-// key naming: [triggerType]_[000-340 orientation]
+// TRACE['static000'] = [ [time1, {'x':posX, 'y':posY}], [time2, {'x':posX, 'y':posY}], ...... ];
+// TRACE['physical000'] = [ [time1, {'x':posX, 'y':posY}], [time2, {'x':posX, 'y':posY}], ...... ];
+// TRACE['social000'] = [ [time1, {'x':posX, 'y':posY}], [time2, {'x':posX, 'y':posY}], ...... ];
+// key naming: [triggerType][000-340 orientation]
 
 // TRACE['static_example'] = [ [time1, {'x':posX, 'y':posY}], [time2, {'x':posX, 'y':posY}], ...... ]; -- for instructions
 // TRACE['static_prac'] = [ [time1, {'x':posX, 'y':posY}], [time2, {'x':posX, 'y':posY}], ...... ]; -- for practice trials
@@ -97,12 +97,18 @@ const INTERTRIAL_INTERVAL = 0.5;
 
 const TRIAL_LIST = [
     {'traceType':'self', 'triggerType':'physical', 'orientation':40, 'recycled':false},
-    {'traceType':'other', 'triggerType':'social', 'orientation':220, 'recycled':false},
+    {'traceType':'other', 'triggerType':'social', 'orientation':40, 'recycled':false},
     {'traceType':'self', 'triggerType':'static', 'orientation':100, 'recycled':false},
-    {'traceType':'other', 'triggerType':'physical', 'orientation':180, 'recycled':false},
+    {'traceType':'other', 'triggerType':'physical', 'orientation':40, 'recycled':false},
     {'traceType':'self', 'triggerType':'social', 'orientation':40, 'recycled':false},
-    {'traceType':'other', 'triggerType':'static', 'orientation':320, 'recycled':false}
+    {'traceType':'other', 'triggerType':'static', 'orientation':100, 'recycled':false}
 ]; // XXX
+
+const TRIAL_ORIENTATION_DICT = {
+    'static':100,
+    'physical':40,
+    'social':40
+}; // XXX
 
 const TRIAL_N = TRIAL_LIST.length;
 // const REST_TRIAL_N = TRIAL_N/BLOCK_N; XXX
@@ -114,7 +120,6 @@ function CREATE_PRACTICE_LIST() {
         let this_condition = CONDITIONS[c];
         practice_list.push({
             'traceType': this_condition[0],
-            // 'traceType': 'self', // XXX
             'triggerType': this_condition[1],
             'orientation': PRACTICE_ORIENTATION_DICT[this_condition[1]],
             'recycled': false
@@ -126,16 +131,22 @@ function CREATE_PRACTICE_LIST() {
 const PRACTICE_LIST = CREATE_PRACTICE_LIST();
 const PRACTICE_TRIAL_N = PRACTICE_LIST.length;
 
-// function CREATE_SCRIPT_LIST() {
-//     let scripts = PRACTICE_ORIENTATION_DICT.map((k, v) => 'js/trace_'+k+'_'+('00'+v).slice(-3)+'.js');
-//     scripts.push('trace_static_example_000.js');
-//     TRIGGER_TYPES.forEach(trigger => scripts.concat(ORIENTATIONS.map(ori => 'js/trace_'+trigger+'_'+('00'+ori).slice(-3)+'.js')));
-//     return scripts;
-// }
+function CREATE_SCRIPT_LIST() {
+    let scripts = Object.entries(PRACTICE_ORIENTATION_DICT).map(function ([k, v], i) {
+            return 'js/trace_'+k+'_'+('00'+v).slice(-3)+'.js';
+        });
+    // scripts.push('trace_static_example_000.js');
+    // TRIGGER_TYPES.forEach(trigger => scripts.concat(ORIENTATIONS.map(ori => 'js/trace_'+trigger+'_'+('00'+ori).slice(-3)+'.js'))); XXX
+    scripts = scripts.concat(Object.entries(TRIAL_ORIENTATION_DICT).map(function ([k, v], i) { // XXX
+        return 'js/trace_'+k+'_'+('00'+v).slice(-3)+'.js';
+        })
+    );
+    return scripts;
+}
 
-// const SCRIPT_LIST = CREATE_SCRIPT_LIST();
+const SCRIPT_LIST = CREATE_SCRIPT_LIST();
 
-const SCRIPT_LIST = ['js/yc_trajectory.js', 'js/yc_trajectory_2.js', 'js/yc_trajectory_3.js', 'js/yc_trajectory_4.js'];
+// const SCRIPT_LIST = ['js/yc_trajectory.js', 'js/yc_trajectory_2.js', 'js/yc_trajectory_3.js', 'js/yc_trajectory_4.js'];
 
 //  ######  ######## #### ##     ## ##     ## ##       ####
 // ##    ##    ##     ##  ###   ### ##     ## ##        ##
@@ -177,8 +188,11 @@ const Y_PADDING = (CANVAS_HEIGHT - SINEWAVE_HEIGHT) / 2;
 function SINEWAVE_FUNCTION(canvas_x) {
     const X = canvas_x - X_PADDING;
     const THETA = X*SINEWAVE_X_SCALING - Math.PI;
-    const Y = (Math.cos(THETA)+1) / SINEWAVE_Y_SCALING;
-    const CANVAS_Y = Y_PADDING + (SINEWAVE_HEIGHT-Y);
+    let y = (Math.cos(THETA)+1) / SINEWAVE_Y_SCALING;
+    if (THETA>4*Math.PI) {
+        y = 2 / SINEWAVE_Y_SCALING;
+    }
+    const CANVAS_Y = Y_PADDING + (SINEWAVE_HEIGHT-y);
     return CANVAS_Y;
 }
 
@@ -186,8 +200,8 @@ const MARK_DIAMETER = 14;
 const OBJECT_DIAMETER = 40;
 const MARK_X = X_PADDING - MARK_DIAMETER/2;
 const MARK_Y = Y_PADDING + SINEWAVE_HEIGHT - MARK_DIAMETER/2;
-const DESTINATION_X = X_PADDING + SINEWAVE_WIDTH;
-const DESTIMATION_Y = Y_PADDING + SINEWAVE_HEIGHT;
+const DESTINATION_X = X_PADDING + SINEWAVE_WIDTH + OBJECT_DIAMETER/2;
+const DESTIMATION_Y = Y_PADDING;
 const OBJECT_INITIAL_X = DESTINATION_X - OBJECT_DIAMETER/2;
 const OBJECT_INITIAL_Y = DESTIMATION_Y - OBJECT_DIAMETER/2;
 
@@ -220,10 +234,10 @@ const BEAT_INTERVAL = 60/BPM;
 const SPATIAL_DEVIATION_LIMIT = PEAK_VALLEY_DIST;
 const TEMPORAL_DEVIATION_LIMIT = BEAT_INTERVAL/2;
 
-const DESTINATION_RADIUS = OBJECT_DIAMETER/2;
-const SOCIAL_RADIUS = 150;
+const PHYSICAL_RADIUS = OBJECT_DIAMETER/2;
+const SOCIAL_RADIUS = SINEWAVE_WIDTH/2;
 const TRIGGER_DIST_DICT = {
-    physical: DESTINATION_RADIUS,
+    physical: PHYSICAL_RADIUS,
     social: SOCIAL_RADIUS,
     static: SOCIAL_RADIUS
 };
@@ -295,7 +309,7 @@ $(document).ready(function() {
         objectSpeed: OBJECT_SPEED,
         destinationX: DESTINATION_X,
         destinationY: DESTIMATION_Y,
-        destinationRadius: DESTINATION_RADIUS,
+        destinationDist: PHYSICAL_RADIUS,
         turningPointXs: TURNING_POINT_CANVAS_X_LIST,
         soundElement: $('#metronome')[0],
         triggerDistDict: TRIGGER_DIST_DICT,

@@ -16,7 +16,7 @@ class gameObject {
             objectSpeed: 0,
             destinationX: 0,
             destinationY: 0,
-            destinationRadius: 0,
+            destinationDist: 0,
             turningPointXs: [],
             soundElement: false,
             triggerDistDict: {},
@@ -106,6 +106,7 @@ class gameObject {
         this.objectActualYDistToBorder = Math.min(Math.abs(OBJECT_Y), this.height-this.objectHeight-Math.abs(OBJECT_Y));
         this.staticEndTime = Math.min(this.objectActualXDistToBorder/this.objectActualXSpeed, this.objectActualYDistToBorder/this.objectActualYSpeed);
         this.actualDestination = this.rotatePos(this.orientation, {x:this.destinationX, y:this.destinationY});
+        this.triggerDist = this.triggerDistDict[this.triggerType];
 
         this.context.clearRect(0, 0, this.width, this.height);
         this.context.strokeStyle = this.lineColor;
@@ -194,15 +195,8 @@ class gameObject {
             this.endDeviationX = this.lastPos.x - this.actualDestination.x;
             this.endDeviationY = this.lastPos.y - this.actualDestination.y;
             this.context.strokeStyle = this.frozenLineColor;
-            for (let i=0;i<100;i++) { // for some reasons this is needed to change strokeStyle
-                this.context.moveTo(this.lastPos.x, this.lastPos.y);
-                this.lastPos.x += 0.001;
-                this.context.lineTo(this.lastPos.x, this.lastPos.y);
-                this.context.stroke();
-            }
-            // this.context.moveTo(this.lastPos.x, this.lastPos.y);
-            // this.context.lineTo(this.actualDestination.x, this.actualDestination.y);
-            // this.context.stroke();
+            const EXTRA_STROKE_POS = (this.triggerType=='self') ? this.lastPos : this.otherlastPos;
+            this.drawExtraStrokes(EXTRA_STROKE_POS); // for some reasons this is needed to change strokeStyle
         }
         if (this.objectEnd && this.traceEnd) {
             this.recognitionStart();
@@ -224,6 +218,15 @@ class gameObject {
                     that.step(timestamp, that);
                 });
             }
+        }
+    }
+
+    drawExtraStrokes(pos) {
+        for (let i=0;i<100;i++) {
+            this.context.moveTo(pos.x, pos.y);
+            pos.x += 0.001;
+            this.context.moveTo(pos.x, pos.y);
+            this.context.stroke();
         }
     }
 
@@ -278,24 +281,24 @@ class gameObject {
         const NOW_ACTUAL_X = NOW_ACTUAL_POS.x;
         const NOW_ACTUAL_Y = NOW_ACTUAL_POS.y;
         this.nextOtherSteps.push({x: NOW_ACTUAL_X, y: NOW_ACTUAL_Y});
-        if (this.timeStamp > NOW_TIMESTAMP) {
+        if (this.timeStamp > NOW_TIMESTAMP && this.otherTrajectory.length > 0) {
             this.findNextMove();
         }
     }
 
     updateDistToDestination() {
-        this.distToDestination = DISTANCE_BETWEEN_POINTS([this.posForCheck.x, this.posForCheck.y], [this.actualDestination.x, this.actualDestination.y]);
+        this.distToDestination = DISTANCE_BETWEEN_POINTS([this.posForCheck.x,this.posForCheck.y], [this.actualDestination.x, this.actualDestination.y]);
     }
 
     checkIfTrigger() {
         if (this.triggered) return true;
-        if (this.distToDestination <= this.triggerDistDict[this.triggerType]) return true;
+        if (this.distToDestination <= this.triggerDist) return true;
         return false;
     }
 
     checkIfTraceEnd() {
         if (this.traceEnd) return true;
-        if (this.distToDestination <= this.destinationRadius) return true;
+        if (this.distToDestination <= this.destinationDist) return true;
         return false;
     }
 

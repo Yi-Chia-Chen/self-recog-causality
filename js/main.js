@@ -482,10 +482,10 @@ function TRIAL_UPDATE(formal_trial, last, this_trial, next_trial, path) {
     trial.interrupted = false;
     trial.otherTrace = false;
     if (trial.traceType == 'other') {
-        // trial.traceNum = trial.triggerType + trial.orientation.toString();
-        // trial.otherTrace = TRACE_DICT[trial.traceNum]; XXX
-        let now_other_trace = RAND_CHOICE([YC_TRAJECTORY,YC_TRAJECTORY_2, YC_TRAJECTORY_3, YC_TRAJECTORY_4]); // XXX
-        trial.otherTrace = now_other_trace.slice(); // XXX
+        trial.traceNum = trial.triggerType + trial.orientation.toString();
+        trial.otherTrace = TRACE_DICT[trial.traceNum].slice();
+        // let now_other_trace = RAND_CHOICE([YC_TRAJECTORY,YC_TRAJECTORY_2, YC_TRAJECTORY_3, YC_TRAJECTORY_4]); // XXX
+        // trial.otherTrace = now_other_trace.slice(); // XXX
     }
     const THIS_GAME = {
         triggerType: this_trial['triggerType'],
