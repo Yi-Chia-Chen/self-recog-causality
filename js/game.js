@@ -100,7 +100,6 @@ class gameObject {
         this.actualDestination = this.rotatePos(this.orientation, {x:this.destinationX, y:this.destinationY});
         this.triggerDist = this.triggerDistDict[this.triggerType];
 
-        this.context.clearRect(0, 0, this.width, this.height);
         this.context.strokeStyle = this.lineColor;
         this.soundElement.currentTime = 0;
         let that = this;
@@ -189,6 +188,7 @@ class gameObject {
             this.context.strokeStyle = this.frozenLineColor;
             const EXTRA_STROKE_POS = (this.triggerType=='self') ? this.lastPos : this.otherlastPos;
             this.drawExtraStrokes(EXTRA_STROKE_POS); // for some reasons this is needed to change strokeStyle
+            this.context.closePath();
         }
         if (this.objectEnd && this.traceEnd) {
             this.recognitionStart();
@@ -347,6 +347,7 @@ class gameObject {
 
     recognitionStart() {
         $(document).off('mousemove');
+        this.context.clearRect(0, 0, this.width, this.height);
         this.recognitionQElement.show();
         this.startToObjectEndRT = Date.now() - this.startTime;
         this.recognitionStartTime = Date.now();
