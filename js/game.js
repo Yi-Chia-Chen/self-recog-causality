@@ -17,13 +17,11 @@ class gameObject {
             destinationX: 0,
             destinationY: 0,
             destinationDist: 0,
-            turningPointXs: [],
             soundElement: false,
             triggerDistDict: {},
             orientation: 0,
             bpm: 0,
-            spatialDeviationLimit: 600,
-            temporalDeviationLimit: 1,
+            deviationLimit: 600,
             recognitionQElement: false,
             interruptCallback: false,
             gameEndCallback: false,
@@ -51,8 +49,6 @@ class gameObject {
         this.objectInitialCenterX = this.objectInitialX + this.objectWidth/2;
         this.objectInitialCenterY = this.objectInitialY + this.objectHeight/2;
         this.beatInterval = 60/this.bpm;
-        this.spatiallyDeviated = false;
-        this.temporallyDeviated = false;
     }
 
     rotatePos(ori, vector) {
@@ -68,14 +64,10 @@ class gameObject {
     }
 
     update(this_game) {
-        this.workingTurningPointXs = this.turningPointXs.slice();
-        this.nextTurningPoint = this.workingTurningPointXs.shift();
         this.selfTrajectory = [];
-        this.spatiallyDeviated = false;
-        this.temporallyDeviated = false;
-        this.maxSpatialDeviationX = 0;
-        this.maxSpatialDeviationY = 0;
-        this.maxTemporalDeviation = 0;
+        this.deviated = false;
+        this.maxDeviationX = 0;
+        this.maxDeviationY = 0;
         this.waitingForTraceEnd = true;
 
         this.triggerType = this_game['triggerType'];
@@ -202,16 +194,11 @@ class gameObject {
             this.recognitionStart();
         } else {
             this.standardizedPosForCheck = this.unrotatePos(this.orientation, this.posForCheck);
-            this.spatiallyDeviated = this.checkSpatialDeviation();
-            this.temporallyDeviated = this.checkTemporalDeviation();
-            if (this.spatiallyDeviated) {
+            this.deviated = this.checkDeviation();
+            if (this.deviated) {
                 this.soundElement.pause();
                 $('body').css('cursor', 'default');
-                this.interruptCallback('spatial');
-            } else if (this.temporallyDeviated) {
-                this.soundElement.pause();
-                $('body').css('cursor', 'default');
-                this.interruptCallback('temporal');
+                this.interruptCallback();
             } else {
                 let that = this;
                 requestAnimationFrame(function(timestamp) {
@@ -327,46 +314,34 @@ class gameObject {
         }
     }
 
-    checkSpatialDeviation() {
-        if(this.checkSpatialDeviationX()) return true;
-        return this.checkSpatialDeviationY();
+    checkDeviation() {
+        if(this.checkDeviationX()) return true;
+        return this.checkDeviationY();
     }
 
-    updateSpatialDeviationX() {
+    updateDeviationX() {
         const BEAT_COUNT_AFTER_FIRST = this.soundTime/this.beatInterval;
         const CORRECT_PROGRESS = BEAT_COUNT_AFTER_FIRST / (this.peakValleyN-1);
         const STANDARDIZED_CORRECT_X = CORRECT_PROGRESS*this.sinewaveWaveWidth + this.xPadding;
         this.xDeviation = Math.abs(this.standardizedPosForCheck.x - STANDARDIZED_CORRECT_X);
     }
 
-    checkSpatialDeviationX() {
-        this.updateSpatialDeviationX();
-        this.maxSpatialDeviationX = Math.max(this.xDeviation, this.maxSpatialDeviationX);
-        if (this.xDeviation > this.spatialDeviationLimit) return true;
+    checkDeviationX() {
+        this.updateDeviationX();
+        this.maxDeviationX = Math.max(this.xDeviation, this.maxDeviationX);
+        if (this.xDeviation > this.deviationLimit) return true;
         return false;
     }
 
-    updateSpatialDeviationY() {
+    updateDeviationY() {
         const STANDARDIZED_CORRECT_Y = SINEWAVE_FUNCTION(this.standardizedPosForCheck.x);
         this.yDeviation = Math.abs(this.standardizedPosForCheck.y - STANDARDIZED_CORRECT_Y);
     }
 
-    checkSpatialDeviationY() {
-        this.updateSpatialDeviationY();
-        this.maxSpatialDeviationY = Math.max(this.yDeviation, this.maxSpatialDeviationY);
-        if (this.yDeviation > this.spatialDeviationLimit) return true;
-        return false;
-    }
-
-    checkTemporalDeviation() {
-        if (this.standardizedPosForCheck.x >= this.nextTurningPoint) {
-            this.nextTurningPoint = this.workingTurningPointXs.shift();
-            const TIME_TO_NEXT = this.soundTime % this.beatInterval;
-            this.temporalDeviation = Math.min(TIME_TO_NEXT, this.beatInterval-TIME_TO_NEXT);
-            this.maxTemporalDeviation = Math.max(this.temporalDeviation, this.maxTemporalDeviation);
-            if (this.temporalDeviation > this.temporalDeviationLimit) return true;
-            return false;
-        }
+    checkDeviationY() {
+        this.updateDeviationY();
+        this.maxDeviationY = Math.max(this.yDeviation, this.maxDeviationY);
+        if (this.yDeviation > this.deviationLimit) return true;
         return false;
     }
 

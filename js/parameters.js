@@ -227,12 +227,9 @@ function SET_TASK_ELEMENT_STYLE() {
 // ##    ##  ##     ## ##     ## ##
 //  ######   ##     ## ##     ## ########
 
-const TURNING_POINT_THETA_LIST = RANGE(Math.PI, 7*Math.PI, Math.PI);
-const TURNING_POINT_CANVAS_X_LIST = TURNING_POINT_THETA_LIST.map(r => X_PADDING + r/SINEWAVE_X_SCALING);
 const BPM = 80;
 const BEAT_INTERVAL = 60/BPM;
-const SPATIAL_DEVIATION_LIMIT = PEAK_VALLEY_DIST;
-const TEMPORAL_DEVIATION_LIMIT = BEAT_INTERVAL/2;
+const DEVIATION_LIMIT = PEAK_VALLEY_DIST;
 
 const PHYSICAL_RADIUS = OBJECT_DIAMETER/2;
 const SOCIAL_RADIUS = SINEWAVE_WIDTH/2;
@@ -310,12 +307,10 @@ $(document).ready(function() {
         destinationX: DESTINATION_X,
         destinationY: DESTIMATION_Y,
         destinationDist: PHYSICAL_RADIUS,
-        turningPointXs: TURNING_POINT_CANVAS_X_LIST,
         soundElement: $('#metronome')[0],
         triggerDistDict: TRIGGER_DIST_DICT,
         bpm: BPM,
-        spatialDeviationLimit: SPATIAL_DEVIATION_LIMIT,
-        temporalDeviationLimit: TEMPORAL_DEVIATION_LIMIT,
+        deviationLimit: DEVIATION_LIMIT,
         recognitionQElement: $('#recognition-q'),
         interruptCallback: INTERRUPT,
         gameEndCallback: GAME_END

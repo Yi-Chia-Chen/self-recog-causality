@@ -506,10 +506,10 @@ function TRIAL() {
     });
 }
 
-function INTERRUPT(error_type) {
+function INTERRUPT() {
     $('body').css('cursor', 'default');
-    alert(error_type); // XXX error_type = spatial or temporal
-    trial.interrupted = error_type;
+    alert('deviated'); // XXX error_type = spatial or temporal
+    trial.interrupted = true;
     trial.trialList.push({'triggerType': trial.triggerType, 'traceType': trial.traceType, 'orientation': trial.orientation, 'recycled': true}) // XXX don't do this for practice
     subj.recycledCount += 1;
     // if (subj.recycledCount < RECYCLE_COUNT_CAP) { XXX
