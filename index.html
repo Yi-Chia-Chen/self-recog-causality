@@ -21,7 +21,7 @@
 <body>
     <noscript>It seems that JavaScript is disabled in your browser. Please go to settings and enable JavaScript for this experiment.</noscript>
 
-    <div class='page-box fixed-box' id='instr-box'>
+    <div class='page-box' id='instr-box'>
         <p id='instr-text'></p>
         <img id='instr-img' src='media/blank.jpg' alt='Image Error: Please contact the experimenter at akadambi@ucla.edu with the code "IMG-ERROR".'></img>
         <audio id='sound-test-aud'>
@@ -36,9 +36,9 @@
             <source src='media/tempo_demo.mp4' />
             Video Error: Please contact akadambi@ucla.edu and include your sona ID and the code "VID-ERROR" to receive your credit.
         </video>
-        <button class='button' id='sound-test-play-button'>PLAY</button>
-        <button class='button' id='again-button'>AGAIN</button>
-        <button class='button' id='next-button'>NEXT</button>
+        <button class='button instr-button' id='sound-test-play-button'>PLAY</button>
+        <button class='button instr-button' id='again-button'>AGAIN</button>
+        <button class='button instr-button' id='next-button'>NEXT</button>
     </div>
 
     <!--======== INFORMED CONSENT FORM ========-->
@@ -73,28 +73,6 @@
         </div>
     </div>
 
-    <!--======== INSTRUCTIONS QUIZ ========-->
-    <div class='page-box fixed-box' id='instr-q-box'>
-        <p class='bold'>What is your job in this experiment?</p>
-        <label><div class='option'><input class='radio' type='radio' name='instr-q' value='forgot' />
-            <p class='option-text'>Select this option if you do not remember</p>
-        </div></label>
-        <label><div class='option'><input class='radio' type='radio' name='instr-q' value='create' />
-            <p class='option-text'>Judge if the blue trace is accurate or not</p>
-        </div></label>
-        <label><div class='option'><input class='radio' type='radio' name='instr-q' value='imitate' />
-            <p class='option-text'>Judge if the blue trace is from you or not</p>
-        </div></label>
-        <label><div class='option'><input class='radio' type='radio' name='instr-q' value='distinguish' />
-            <p class='option-text'>Judge if the red trace is accurate or not</p>
-        </div></label>
-        <label><div class='option'><input class='radio' type='radio' name='instr-q' value='own' />
-            <p class='option-text'>Judge if the red trace is from you or not</p>
-        </div></label>
-        <button class='button' id='instr-q-button'>SUBMIT</button>
-        <p class='warning' id='instr-q-warning'></p>
-    </div>
-
     <!--======== TASK ========-->
     <div class='page-box' id='task-box'>
         <audio id='metronome'>
@@ -105,7 +83,9 @@
         <div id='end-object'></div>
         <div id='canvas-frame'></div>
         <div id='start-mark'></div>
-        <div id='recognition-q'>Yours or Not?</div>
+        <div class='game-text' id='interruption-notice'>Oops! Deviated too much!</div>
+        <div class='game-text' id='practice-score'></div>
+        <div class='game-text' id='recognition-q'>Yours or Not?</div>
     </div>
 
     <!--======== REST ========-->
@@ -134,6 +114,20 @@
         <div class='question' id='other-device-question'>
             <p class='bold'>Please enter the device you used for controlling the cursor:</p>
             <textarea id='other-device'></textarea>
+        </div>
+
+        <div class='question'>
+            <p class='bold'>Do you currently have a dual-monitor setup where the other monitor was on during the games?</p>
+            <p class='small-dim'>Please answer YES even if you did not actively use the other monitor.</p>
+            <label><div class='option'><input class='radio' type='radio' name='monitor' value='0' /><p class='option-text'>No, I don't.</p></div></label>
+            <label><div class='option'><input class='radio' type='radio' name='monitor' value='1' /><p class='option-text'>Yes, I do.</p></div></label>
+        </div>
+
+        <div class='question'>
+            <p class='bold'>Was the browser in the full-screen mode during all the games?</p>
+            <p class='small-dim'>You will receive your credit regardless of what your answer is here. Please be honest for science! Thanks!</p>
+            <label><div class='option'><input class='radio' type='radio' name='fullscreen' value='0' /><p class='option-text'>No, it wasn't.</p></div></label>
+            <label><div class='option'><input class='radio' type='radio' name='fullscreen' value='1' /><p class='option-text'>Yes, it was.</p></div></label>
         </div>
 
         <div class='question'>
@@ -170,15 +164,17 @@
     <div class='page-box' id='manipulation-check-q-box'>
         <div class='question'>
             Which of the 2 games gives you stronger impression that the yellow ball is alive?
-            <label><div class='option'><input class='radio' type='radio' name='alive' value='1' /><p class='option-text'>The 1st game</p></div></label>
-            <label><div class='option'><input class='radio' type='radio' name='alive' value='2' /><p class='option-text'>The 2nd game</p></div></label>
-            <label><div class='option'><input class='radio' type='radio' name='alive' value='0' /><p class='option-text'>No difference/I can't remember</p></div></label>
+            <label><div class='option'><input class='radio' type='radio' name='manipulationCheckAlive' value='physical' /><p class='option-text'>The 1st game</p></div></label>
+            <label><div class='option'><input class='radio' type='radio' name='manipulationCheckAlive' value='social' /><p class='option-text'>The 2nd game</p></div></label>
+            <label><div class='option'><input class='radio' type='radio' name='manipulationCheckAlive' value='same' /><p class='option-text'>No difference</p></div></label>
+            <label><div class='option'><input class='radio' type='radio' name='manipulationCheckAlive' value='forgot' /><p class='option-text'>I can't remember</p></div></label>
         </div>
         <div class='question'>
             Which of the 2 games gives you stronger impression that the yellow ball is acting socially?
-            <label><div class='option'><input class='radio' type='radio' name='social' value='1' /><p class='option-text'>The 1st game</p></div></label>
-            <label><div class='option'><input class='radio' type='radio' name='social' value='2' /><p class='option-text'>The 2nd game</p></div></label>
-            <label><div class='option'><input class='radio' type='radio' name='social' value='0' /><p class='option-text'>No difference/I can't remember</p></div></label>
+            <label><div class='option'><input class='radio' type='radio' name='manipulationCheckSocial' value='physical' /><p class='option-text'>The 1st game</p></div></label>
+            <label><div class='option'><input class='radio' type='radio' name='manipulationCheckSocial' value='social' /><p class='option-text'>The 2nd game</p></div></label>
+            <label><div class='option'><input class='radio' type='radio' name='manipulationCheckSocial' value='same' /><p class='option-text'>No difference</p></div></label>
+            <label><div class='option'><input class='radio' type='radio' name='manipulationCheckSocial' value='forgot' /><p class='option-text'>I can't remember</p></div></label>
         </div>
         <button class='button' id='manipulation-check-q-button'>SUBMIT</button>
         <p class='warning' id='manipulation-check-q-warning'></p>
@@ -187,15 +183,15 @@
     <!--======== DEBRIEFING ========-->
     <div class='page-box' id='debriefing-box'>
         You have finished the experiment! Thank you very much!<br /><br />Whenever you are ready, click END to submit your work. You may read the text below if you are interested in what we are studying.<br />
-        <button class='button' onclick='END_TO_SONA()'>END</button>
+        <button class='button' id='end-button'>END</button>
 
         <br /><br /><br />
 
         <strong>Debriefing Sheet</strong><br /><br />
 
         Thanks for participating in the experiment.<br /><br />
-        In the games you play, sometimes you see your own movements like what you'd see normally (e.g., you see how your hands move according to how you move it), but sometimes your visual expereince deviate from what you command your hand to do and what you feel from the movements of your hand. How much you pick up on the mismatch and how much you perceptual system tolerate the mismatch determine how much weaker you experience the visual feedback as yourself.<br /><br />
-        What we were testing in these games was how the yellow ball's motion influenced your tolerance for the mismatch. Sometimes the ball appeared to be causally "launched" by the cursor, in a physical manner. Critically, sometimes it appeared to suddenly start moving on it's own when the cursor get near, as if it is avoiding the cursor as in a social interaction. Since we often think of ourselves and our actions in the social terms, compared to the physcial terms, we are testing if this tendency translate to different levels of tolerance for the mismatch between what you see and what you feel from your hand movements.<br /><br />
+        In the games you play, sometimes you see your own movements like what you'd see normally (e.g., you see how your hands move according to how you move it), but sometimes your visual experience deviate from what you command your hand to do and what you feel from the movements of your hand. How much you pick up on the mismatch and how much you perceptual system tolerate the mismatch determine how much weaker you experience the visual feedback as yourself.<br /><br />
+        What we were testing in these games was how the yellow ball's motion influenced your tolerance for the mismatch. Sometimes the ball appeared to be causally "launched" by the cursor, in a physical manner. Critically, sometimes it appeared to suddenly start moving on it's own when the cursor get near, as if it is avoiding the cursor as in a social interaction. Since we often think of ourselves and our actions in the social terms, compared to the physical terms, we are testing if this tendency translate to different levels of tolerance for the mismatch between what you see and what you feel from your hand movements.<br /><br />
 
         Please don't hesitate to contact the researcher if you have any questions:<br /><br />
         Akila Kadambi<br />
