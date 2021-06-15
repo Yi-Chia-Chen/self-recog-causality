@@ -330,7 +330,7 @@ class gameObject {
             };
             this.context.clearRect(0, 0, this.width, this.height); // added to only show current location, not trace
             this.context.fillStyle = this.lineColor;
-            this.context.fillRect(this.lastPos.x-this.lineWidth/2, this.lastPos.y-this.lineWidth/2, this.lineWidth, this.lineWidth);
+            this.context.fillRect(this.otherlastPos.x-this.lineWidth/2, this.otherlastPos.y-this.lineWidth/2, this.lineWidth, this.lineWidth);
             // this.context.lineTo(this.otherlastPos.x, this.otherlastPos.y); // removed to only show current location, not trace
             this.context.stroke();
         }
