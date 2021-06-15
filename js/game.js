@@ -290,10 +290,10 @@ class gameObject {
         this.timeStamp = (Date.now() - this.startTime) / 1000;
         this.soundTime = this.soundElement.currentTime;
         this.lastPos = { x: this.pos.x, y: this.pos.y };
-        this.context.clearRect(0, 0, this.width, this.height); //xxx: added to only show current location, not trace
+        this.context.clearRect(0, 0, this.width, this.height); // added to only show current location, not trace
         this.context.fillStyle = this.lineColor;
-        this.context.fillRect(this.lastPos.x, this.lastPos.y, this.lineWidth, this.lineWidth);
-        // this.context.lineTo(this.lastPos.x, this.lastPos.y); //xxx: removed to only show current location, not trace
+        this.context.fillRect(this.lastPos.x-this.lineWidth/2, this.lastPos.y-this.lineWidth/2, this.lineWidth, this.lineWidth);
+        // this.context.lineTo(this.lastPos.x, this.lastPos.y); // removed to only show current location, not trace
         this.context.stroke();
         const STANDARDIZED_LAST_POS = this.unrotatePos(
             this.orientation,
@@ -328,10 +328,10 @@ class gameObject {
                 x: s.x,
                 y: s.y
             };
-            this.context.clearRect(0, 0, this.width, this.height); //xxx: added to only show current location, not trace
+            this.context.clearRect(0, 0, this.width, this.height); // added to only show current location, not trace
             this.context.fillStyle = this.lineColor;
-            this.context.fillRect(this.lastPos.x, this.lastPos.y, this.lineWidth, this.lineWidth);
-            // this.context.lineTo(this.otherlastPos.x, this.otherlastPos.y); //xxx: removed to only show current location, not trace
+            this.context.fillRect(this.lastPos.x-this.lineWidth/2, this.lastPos.y-this.lineWidth/2, this.lineWidth, this.lineWidth);
+            // this.context.lineTo(this.otherlastPos.x, this.otherlastPos.y); // removed to only show current location, not trace
             this.context.stroke();
         }
         return this.otherlastPos;

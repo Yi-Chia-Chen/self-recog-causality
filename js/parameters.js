@@ -264,7 +264,7 @@ const DESTINATION_Y = Y_PADDING;
 const OBJECT_INITIAL_X = DESTINATION_X - OBJECT_DIAMETER / 2;
 const OBJECT_INITIAL_Y = DESTINATION_Y - OBJECT_DIAMETER / 2;
 
-const TRACE_LINE_WIDTH = 5; //xxx: changed from 2 to 5
+const TRACE_LINE_WIDTH = 10;
 const TRACE_CAP = "round";
 const TRACE_COLOR = "red";
 
