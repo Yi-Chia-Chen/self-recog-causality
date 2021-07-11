@@ -202,9 +202,9 @@ const MAIN_INSTRUCTIONS_ARRAY = [
     [false,false,"Before I explain the details of how to play the game, let me just quickly show you what the game looks like when I play it."],
     [false, SHOW_GAME_DEMO, ""],
     [SHOW_INITIAL_DISPLAY,false,"Now onto the explanations:<br />You will be playing this game multiple times. Each game started with a blue path in the center (see the image below). There is a white dot in the beginning of the path, and a yellow dot at the end of the path."],
-    [SHOW_ARROW_TO_START_DOT,false,"To start each game, you will need to click on the white dot with your cursor to start. After that, your cursor will be hidden from your view."],
-    [SHOW_TRACE_DISPLAY,false,"Once the game starts, as you move your (hidden) cursor, it will leave a red trace (see the image below).<br /><br />You will *NOT* need to press down any mouse buttons during this! (So just move your cursor, not dragging it.)"],
-    [HIDE_INSTR_IMG,false,"Your job is to trace the blue path with your cursor, as closely as possible.<br /><br />Try it once on the next page! (Note that a sound will be played while you are tracing the path, but you can ignore it for now.)"],
+    [SHOW_ARROW_TO_START_DOT,false,"To start each game, you will need to click on the white dot with your cursor to start. After that, your cursor will be replaced by a red dot."],
+    [SHOW_TRACE_DISPLAY,false,"Once the game starts, you will move your mouse to control the red dot.<br /><br />You will *NOT* need to press down any mouse buttons during this! (So just move your mouse, not pressing down and dragging it.)"],
+    [HIDE_INSTR_IMG,false,"Your job is to trace the blue path with the red dot, as closely as possible.<br /><br />Try it once on the next page! (Note that a sound will be played while you are tracing the path, but you can ignore it for now.)"],
     [false, RUN_TRACING_PRACTICE, ""],
     [HIDE_ALL_BOXES,SHOW_AGAIN_BUTTON_FOR_TRACING_PRACTICE,"Got it?<br />Hit AGAIN if you'd like to give it another try.<br />Otherwise, hit NEXT."],
     [HIDE_AGAIN_BUTTON,false,"Let's talk about the sound: The clicking sound in the background serves to guide the speed of your cursor movements during the game."],
@@ -216,18 +216,19 @@ const MAIN_INSTRUCTIONS_ARRAY = [
     [HIDE_ALL_BOXES,false,"As you may have noticed, it is not exactly easy on the first try. Since it is VERY important that you trace the path in the specified speed as accurately as possible, you will practice this a few times before we continue the explanation for the game."],
     [BIND_TEMPO_PRACTICE_BLOCK,false,"During the practice, you will see a score after each try, which indicates how much your trace deviates from the path and the tempo. Your goal is to complete 20 practice games and reach above 60% 4 times in a row after. Of course, I will be glad if you aim at 100%!<br /><br />Hit SPACE to start!"],
     [false,false,"You've passed! Good job!<br /><br />Now that you are doing so well, in the actual game, I'll add a hard limit on how much you can deviate from the ideal path and speed:<br />The game will be interrupted by a warning if you stray too far, and you will have to repeat that particular game later. So keep up the good work!"],
-    [false,false,"In the actual game, there will be a yellow dot at the end of the path, which moves during the games. In each game, it may stay static, appear to be pushed away, or move away on its own to avoid contact with your trace. Whichever happens, your job is to remain calm and carry on."],
-    [false,false,"Now here's one last trick for the formal games: Sometimes, the red trace will *NOT* be from your cursor movements, but from a prerecorded game of others."],
-    [false,false,"So after each game, you will be asked to guess whether the red trace was yours or a prerecorded one, by pressing Y for yours, and N for not yours.<br /><br />Try it once on the next page!"],
+    [false,false,"In the actual game, there will be a yellow dot at the end of the path, which moves during the games. In each game, it may stay static, appear to be pushed away, or move away on its own to avoid contact with the red dot. Whichever happens, your job is to remain calm and carry on."],
+    [false,false,"Now here's one last trick for the formal games: Sometimes, the red dot will *NOT* be following your cursor movements, but moving along a path from a prerecorded game of others."],
+    [false,false,"So after each game, you will be asked to guess whether the red dot was following your cursor movements or a prerecorded path, by pressing Y for yours, and N for not yours.<br /><br />Try it once on the next page!"],
     [false, RUN_FULL_PRACTICE, ""],
-    [HIDE_ALL_BOXES,SHOW_AGAIN_BUTTON_FOR_FULL_PRACTICE,"That was a prerecorded one. Can you tell?<br /><br />You can look at it again by clicking AGAIN, or move on by clicking NEXT."],
-    [HIDE_AGAIN_BUTTON,false,"Sometimes, you may be relatively confident that you're seeing yours or a precorded trace, sometimes you may not. Either way is completely fine. Just make your best guess."],
-    [false,false,"A quick review:<br />(1) Click on the white dot to start.<br />(2) Trace the blue path following the tempo of the click sound.<br />(3) Make your best guess whether the red trace is yours or not."],
+    [HIDE_ALL_BOXES,SHOW_AGAIN_BUTTON_FOR_FULL_PRACTICE,"That was a prerecorded path. Can you tell?<br /><br />You can look at it again by clicking AGAIN, or move on by clicking NEXT."],
+    [HIDE_AGAIN_BUTTON,false,"Sometimes, you may be relatively confident that the red dot is following your cursor movements or a prerecorded path, sometimes you may not. Either way is completely fine. Just make your best guess."],
+    [false,false,"While there are various strategies you can use to test if the red dot is following your cursor movements (e.g., pausing your movements sometimes to see if the dot pauses as well), please try your best to *NOT* use them intentionally.<br /><br />Just focus on tracing the path at the designated speed. Otherwise, you will likely incur trace deviations and fail the games."]
+    [false,false,"Okay, now, a quick review:<br />(1) Click on the white dot to start.<br />(2) Trace the blue path following the tempo of the click sound.<br />(3) Make your best guess whether the red dot is following your cursor movements or not."],
     [BIND_START_EXPERIMENT,false,"That's it!<br /><br />Now you may start the formal games by press SPACE!"],
     [false,false,"You are almost done! I need you to play 2 last games with a small change."],
-    [false,false,"This time, I won't be asking you whether the trace is yours or prerecorded. They will always be yours."],
+    [false,false,"This time, I won't be asking you whether the red dot is following your cursor movements or not. It will always follow your cursor."],
     [BIND_MANIPULATION_CHECK,false,"Instead, please pay attention to your overall impressions of the displays throughout these 2 games. I will ask you 2 quick questions after.<br /><br />Press SPACE to start!"],
-    [BIND_MANIPULATION_CHECK_QUESTIONS,false,"In these 2 games you just played, the yellow dot moved in different ways and that sometimes gives rise to different impressions.<br /><br />Even though you clearly know that it was just a yellow disk on the screen, sometimes you may still have an impression that it appears to be alive or acting socially.<br /><br />On the next page, I am going to ask you two questions about those impressions."]
+    [BIND_MANIPULATION_CHECK_QUESTIONS,false,"In these 2 games you just played, the yellow dot at the end of the path moved in different ways and that sometimes gives rise to different impressions.<br /><br />Even though you clearly know that it was just a yellow dot on the screen, sometimes you may still have an impression that it appears to be alive or acting socially.<br /><br />On the next page, I am going to ask you two questions about those impressions."]
 ];
 
 const REST_INSTRUCTION =
