@@ -1,15 +1,9 @@
 <?php
-    header('Content-Type: text/plain');
+    $file_path = $_POST['directory_path'] . '/' . $_POST['file_name'];
+    $file_content = $_POST['data'];
 
-    $save_directory = $_POST['directory_path'];
-    $file_name = $_POST['file_name'];
-    $data = $_POST['data'];
-
-    if (!is_dir($save_directory)) {
-        mkdir($save_directory, 0777, true);
-    }
-
-    $dataFile = fopen($save_directory . '/' . $file_name, 'a');
-    fwrite($dataFile, $data);
-    fclose($dataFile);
+    $handle = fopen($file_path, 'a');
+    fwrite($handle, $file_content);
+    fclose($handle);
+    chmod($file_path, 0777);
 ?>

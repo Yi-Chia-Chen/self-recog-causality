@@ -1,21 +1,19 @@
 <?php
-    header('Content-Type: text/plain');
     $directory_path = $_POST['directory_path'];
-    $file_path = $directory_path . '/' . $_POST['file_name'];
+    $file_name = $_POST['file_name'];
+    $file_path = $directory_path . '/' . $file_name;
 
     if (is_file($file_path)) {
-        $subjNumFile = fopen($file_path, 'r');
-        $subjNum = fgets($subjNumFile) + 1;
-        fclose($subjNumFile);
+        $handle = fopen($file_path, 'r');
+        $subj_num = fgets($handle) + 1;
+        fclose($handle);
     } else {
-        $subjNum = 1;
+        $subj_num = 1;
     }
-    echo $subjNum;
+    echo $subj_num;
 
-    if (!is_dir($directory_path)) {
-        mkdir($directory_path, 0777, true);
-    }
-    $subjNumFile = fopen($file_path, 'w');
-    fwrite($subjNumFile, $subjNum);
-    fclose($subjNumFile);
+    $handle = fopen($file_path, 'w');
+    fwrite($handle, $subj_num);
+    fclose($handle);
+    chmod($file_path, 0777);
 ?>

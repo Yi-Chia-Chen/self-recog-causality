@@ -38,9 +38,10 @@ class gameObject {
         this.context = this.canvasElement[0].getContext("2d");
         this.context.canvas.width = this.width;
         this.context.canvas.height = this.height;
-        this.context.lineWidth = this.lineWidth;
-        this.context.lineCap = this.lineCap;
-        this.context.strokeStyle = this.lineColor;
+        // this.context.lineWidth = this.lineWidth;
+        // this.context.lineCap = this.lineCap;
+        // this.context.strokeStyle = this.lineColor;
+        this.context.fillStyle = this.lineColor;
         this.markX = parseInt(this.mark.css("left"), 10);
         this.markY = parseInt(this.mark.css("top"), 10);
         this.markWidth = this.mark.width();
@@ -85,7 +86,8 @@ class gameObject {
         this.maxDeviationX = 0;
         this.maxDeviationY = 0;
         this.waitingForTraceEnd = true;
-        this.context.strokeStyle = this.lineColor;
+        // this.context.strokeStyle = this.lineColor;
+        this.context.fillStyle = this.lineColor;
         this.soundElement.currentTime = 0;
         let attribute_to_set = [
             "deviated",
@@ -95,6 +97,7 @@ class gameObject {
             "triggerTime",
             "startToTriggerDuration",
             "startToObjectEndRT",
+            "recognition",
             "recognitionRT",
             "objectMoveDuration"
         ];
@@ -178,7 +181,7 @@ class gameObject {
         });
         this.startDeviationX = STANDARDIZED_START_POS["x"] - this.markCenterX;
         this.startDeviationY = STANDARDIZED_START_POS["y"] - this.markCenterY;
-        this.context.beginPath();
+        // this.context.beginPath();
         this.selfTrajectory.push({
             t: this.startTime,
             x: STANDARDIZED_START_POS["x"],
@@ -238,11 +241,16 @@ class gameObject {
             this.traceRT = (Date.now() - this.startTime) / 1000;
             this.endDeviationX = this.lastPos.x - this.actualDestination.x;
             this.endDeviationY = this.lastPos.y - this.actualDestination.y;
-            this.context.strokeStyle = this.frozenLineColor;
-            const EXTRA_STROKE_POS =
-                this.triggerType == "self" ? this.lastPos : this.otherlastPos;
-            this.drawExtraStrokes(EXTRA_STROKE_POS); // for some reasons this is needed to change strokeStyle
-            this.context.closePath();
+            // this.context.strokeStyle = this.frozenLineColor;
+            // const EXTRA_STROKE_POS =
+            //     this.traceType == "self" ? this.lastPos : this.otherlastPos;
+            // this.drawExtraStrokes(EXTRA_STROKE_POS); // for some reasons this is needed to change strokeStyle
+            // this.context.closePath();
+            this.frozenStrokePos = (this.traceType == "self") ? this.lastPos : this.otherlastPos;
+            this.context.clearRect(0, 0, this.width, this.height);
+            this.context.fillStyle = this.frozenLineColor;
+            this.context.fillRect(this.frozenStrokePos.x-this.lineWidth/2, this.frozenStrokePos.y-this.lineWidth/2, this.lineWidth, this.lineWidth);
+            // this.context.stroke();
         }
         if (this.objectEnd && this.traceEnd && this.tempo_practice) {
             $(window).off("mousemove");
@@ -276,17 +284,17 @@ class gameObject {
         }
     }
 
-    drawExtraStrokes(pos) {
-        for (let i = 0; i < 100; i++) {
-            this.context.moveTo(pos.x, pos.y);
-            pos.x += 0.001;
-            this.context.moveTo(pos.x, pos.y);
-            this.context.stroke();
-        }
-    }
+    // drawExtraStrokes(pos) {
+    //     for (let i = 0; i < 100; i++) {
+    //         this.context.moveTo(pos.x, pos.y);
+    //         pos.x += 0.001;
+    //         this.context.moveTo(pos.x, pos.y);
+    //         this.context.stroke();
+    //     }
+    // }
 
     selfDraw() {
-        this.context.moveTo(this.lastPos.x, this.lastPos.y);
+        // this.context.moveTo(this.lastPos.x, this.lastPos.y);
         this.timeStamp = (Date.now() - this.startTime) / 1000;
         this.soundTime = this.soundElement.currentTime;
         this.lastPos = { x: this.pos.x, y: this.pos.y };
@@ -294,7 +302,7 @@ class gameObject {
         this.context.fillStyle = this.lineColor;
         this.context.fillRect(this.lastPos.x-this.lineWidth/2, this.lastPos.y-this.lineWidth/2, this.lineWidth, this.lineWidth);
         // this.context.lineTo(this.lastPos.x, this.lastPos.y); // removed to only show current location, not trace
-        this.context.stroke();
+        // this.context.stroke();
         const STANDARDIZED_LAST_POS = this.unrotatePos(
             this.orientation,
             this.lastPos
@@ -323,7 +331,7 @@ class gameObject {
         this.nextOtherSteps = [];
         this.findNextMove();
         for (let s of this.nextOtherSteps) {
-            this.context.moveTo(this.otherlastPos.x, this.otherlastPos.y);
+            // this.context.moveTo(this.otherlastPos.x, this.otherlastPos.y);
             this.otherlastPos = {
                 x: s.x,
                 y: s.y
@@ -332,7 +340,7 @@ class gameObject {
             this.context.fillStyle = this.lineColor;
             this.context.fillRect(this.otherlastPos.x-this.lineWidth/2, this.otherlastPos.y-this.lineWidth/2, this.lineWidth, this.lineWidth);
             // this.context.lineTo(this.otherlastPos.x, this.otherlastPos.y); // removed to only show current location, not trace
-            this.context.stroke();
+            // this.context.stroke();
         }
         return this.otherlastPos;
     }

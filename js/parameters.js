@@ -8,7 +8,7 @@
 // ##        ##   ##  ##        ##       ##    ##   ##  ##     ## ##       ##   ###    ##
 // ######## ##     ## ##        ######## ##     ## #### ##     ## ######## ##    ##    ##
 
-const FORMAL = false; // XXX
+const FORMAL = true;
 const EXPERIMENT_NAME = "sfRecog";
 const EXPERIMENT_VERSION = "pretestTracing";
 const SUBJ_NUM_FILE =
@@ -24,10 +24,10 @@ const ATTRITION_FILE =
     "attrition_" + EXPERIMENT_NAME + "_" + EXPERIMENT_VERSION + ".txt";
 const SAVING_SCRIPT = "php/save.php";
 const SUBJ_NUM_SCRIPT = "php/subjNum.php";
-const SAVING_DIR = FORMAL ? "../data/formal" : "../data/testing";
+const SAVING_DIR = FORMAL ? "/var/www-data-experiments/cvlstudy_data/YCC/sfRecog/formal" : "/var/www-data-experiments/cvlstudy_data/YCC/sfRecog/testing";
 const ID_GET_VARIABLE_NAME = "sonacode";
 const COMPLETION_URL =
-    "https://ucla.sona-systems.com/webstudy_credit.aspx?experiment_id=1859&credit_token=d7523faabcfb41709e13fb159059df7f&survey_code="; // XXX
+    "https://ucla.sona-systems.com/webstudy_credit.aspx?experiment_id=1859&credit_token=d7523faabcfb41709e13fb159059df7f&survey_code=";
 
 //  ######  ########  #### ######## ######## ########  ####    ###
 // ##    ## ##     ##  ##     ##    ##       ##     ##  ##    ## ##
@@ -69,11 +69,11 @@ const ORIENTATIONS_N = ORIENTATIONS.length;
 const ORIENTATION_PER_CONDITION_PER_BLOCK = ORIENTATIONS_N / CONDITION_N;
 const INTERTRIAL_INTERVAL = 0.5;
 
-const TEMPO_PRACTICE_MIN_TRIAL_N = 6; // 20 XXX
+const TEMPO_PRACTICE_MIN_TRIAL_N = 20;
 const TEMPO_PRACTICE_MAX_TRIAL_N = 40;
 const TEMPO_PRACTICE_MAX_REMAINING_N =
     TEMPO_PRACTICE_MAX_TRIAL_N - TEMPO_PRACTICE_MIN_TRIAL_N;
-const PASS_COUNT_CRITERIA = 1; // 4 XXX
+const PASS_COUNT_CRITERIA = 4;
 const SCORE_DURATION = 0.5;
 const NOTICE_DURATION = 0.7;
 
@@ -83,115 +83,69 @@ function CREATE_TEMPO_PRACTICE_LIST() {
         tempo_practice_list.push({
             traceType: "self",
             triggerType: "static",
-            orientation: ORIENTATIONS[i % ORIENTATIONS.length], // RAND_CHOICE(ORIENTATIONS),
+            orientation: RAND_CHOICE(ORIENTATIONS),
             recycled: false
         });
     }
     return tempo_practice_list;
 }
 
-// function CREATE_PRACTICE_LIST() {
-//     let practice_list = [];
-//     for (const c of CONDITIONS) {
-//         practice_list.push({
-//             traceType: c[0],
-//             triggerType: c[1],
-//             orientation: PRACTICE_ORIENTATION_DICT[c[1]],
-//             recycled: false
-//         });
-//     }
-//     return SHUFFLE_ARRAY(practice_list);
-// }
-
-const PRACTICE_LIST = [
-    // XXX
-    {
-        traceType: "other",
-        triggerType: "social",
-        orientation: PRACTICE_ORIENTATION_DICT["social"],
-        recycled: false
+function CREATE_PRACTICE_LIST() {
+    let practice_list = [];
+    for (const c of CONDITIONS) {
+        practice_list.push({
+            traceType: c[0],
+            triggerType: c[1],
+            orientation: PRACTICE_ORIENTATION_DICT[c[1]],
+            recycled: false
+        });
     }
-];
+    return SHUFFLE_ARRAY(practice_list);
+}
 
-// var condition_orientation_array = Array(CONDITIONS.length).fill(ORIENTATIONS);
-// function CREATE_TRIAL_LIST() {
-//     let block_trial_dict = {}
-//     for (let b=0; b<BLOCK_N; b++) {
-//         let block_trial_list = [];
-//         let block_selected_orientations = [];
-//         for (let c=0; c<CONDITIONS.length; c++) {
-//             let remaining_orientations = condition_orientation_array[c];
-//             let selections = REMOVE_ARRAY_ELEMENTS_BASED_ON_ANOTHER_ARRAY(remaining_orientations, block_selected_orientations);
-//             let selected = SAMPLE_W_REPLACEMENT(selections, ORIENTATION_PER_CONDITION_PER_BLOCK);
-//             block_selected_orientations = block_selected_orientations.concat(selected);
-//             condition_orientation_array[c] = REMOVE_ARRAY_ELEMENTS_BASED_ON_ANOTHER_ARRAY(remaining_orientations, selected);
-//             let this_condition = CONDITIONS[c];
-//             block_trial_list = block_trial_list.concat(selected_orientations.map(o =>
-//                 { return {'traceType':this_condition[0], 'triggerType':this_condition[1], 'orientation':o, 'recycled':false}})
-//             );
-//         }
-//         block_trial_dict[b] = SHUFFLE_ARRAY(block_trial_list);
-//     }
 
-//     let trial_list = [];
-//     for (let i=0; i<BLOCK_N; i++) {
-//         trial_list = trial_list.concat(block_trial_dict[i]);
-//     }
-//     return trial_list;
-// } XXX
+function CREATE_TRIAL_LIST() {
+    let block_assignment_array = [
+        [1, 2, 3, 4, 5, 6],
+        [2, 3, 4, 5, 6, 1],
+        [3, 4, 5, 6, 1, 2],
+        [4, 5, 6, 1, 2, 3],
+        [5, 6, 1, 2, 3, 4],
+        [6, 1, 2, 3, 4, 5],
+    ];
+    let size = block_assignment_array.length;
+    let block_assignment_array_1 = SHUFFLE_ARRAY(block_assignment_array);
+    let block_assignment_array_2 = SHUFFLE_ARRAY(block_assignment_array);
+    block_assignment_array_1 = TRANSPOSE_2D_MATRIX(block_assignment_array_1);
+    block_assignment_array_2 = TRANSPOSE_2D_MATRIX(block_assignment_array_2);
+    block_assignment_array_1 = SHUFFLE_ARRAY(block_assignment_array_1);
+    block_assignment_array_2 = SHUFFLE_ARRAY(block_assignment_array_2);
 
-const TRIAL_LIST = [
-    {
-        traceType: "self",
-        triggerType: "physical",
-        orientation: 30,
-        recycled: false
-    },
-    {
-        traceType: "other",
-        triggerType: "social",
-        orientation: 30,
-        recycled: false
-    },
-    {
-        traceType: "self",
-        triggerType: "static",
-        orientation: 90,
-        recycled: false
-    },
-    {
-        traceType: "other",
-        triggerType: "physical",
-        orientation: 30,
-        recycled: false
-    },
-    {
-        traceType: "self",
-        triggerType: "social",
-        orientation: 30,
-        recycled: false
-    },
-    {
-        traceType: "other",
-        triggerType: "static",
-        orientation: 90,
-        recycled: false
+    let block_trial_dict = {1: [], 2: [], 3: [], 4: [], 5: [], 6: []}
+    for (let i=0; i<size; i++) {
+        for (let j=0; j<size; j++) {
+            block_trial_dict[block_assignment_array_1[i][j]] = block_trial_dict[block_assignment_array_1[i][j]].concat(
+                {'traceType':CONDITIONS[i][0], 'triggerType':CONDITIONS[i][1], 'orientation':ORIENTATIONS[j], 'recycled':false}
+            )
+            block_trial_dict[block_assignment_array_2[i][j]] = block_trial_dict[block_assignment_array_2[i][j]].concat(
+                {'traceType':CONDITIONS[i][0], 'triggerType':CONDITIONS[i][1], 'orientation':ORIENTATIONS[j+6], 'recycled':false}
+            )
+        }
     }
-]; // XXX
-
-const TRIAL_ORIENTATION_DICT = {
-    static: 90,
-    physical: 30,
-    social: 30
-}; // XXX
+    let trial_list = [];
+    for (let b=1; b<=BLOCK_N; b++) {
+        trial_list = trial_list.concat(SHUFFLE_ARRAY(block_trial_dict[b]));
+    }
+    return trial_list;
+}
 
 const TEMPO_PRACTICE_LIST = CREATE_TEMPO_PRACTICE_LIST();
-// const PRACTICE_LIST = CREATE_PRACTICE_LIST(); XXX
+const PRACTICE_LIST = CREATE_PRACTICE_LIST();
 const PRACTICE_TRIAL_N = PRACTICE_LIST.length;
-// const TRIAL_LIST = CREATE_TRIAL_LIST(); XXX
+const TRIAL_LIST = CREATE_TRIAL_LIST();
 const TRIAL_N = TRIAL_LIST.length;
-// const REST_TRIAL_N = TRIAL_N/BLOCK_N; XXX
-const RECYCLE_COUNT_CAP = 1; // TRIAL_N/6; XXX
+const REST_TRIAL_N = TRIAL_N/BLOCK_N;
+const RECYCLE_COUNT_CAP = TRIAL_N/6;
 
 function CREATE_SCRIPT_LIST() {
     let scripts = [];
@@ -202,7 +156,7 @@ function CREATE_SCRIPT_LIST() {
             );
         }
     }
-    // loop through TRIGGER_TYPES as well for formal experiment XXX
+    // loop through TRIGGER_TYPES as well for the experiment with subject's trajectories XXX
     return scripts;
 }
 
@@ -225,8 +179,8 @@ const IMG_LIST = [
     "rhythm_guide.jpg"
 ];
 const VIDEO_LIST = [
-    // 'game_demo.mp4',
-    // 'tempo_demo.mp4' // XXX create them
+    'game_demo.mp4',
+    'tempo_demo.mp4'
 ];
 const SOUND_LIST = ["metronome_80bpm_181beats_centered.mp3"];
 const SINEWAVE_WIDTH = 400;
@@ -385,7 +339,7 @@ $(document).ready(function () {
         resetTitles: TRIAL_RESET_TITLES,
         pracTrialN: PRACTICE_TRIAL_N,
         trialN: TRIAL_N,
-        // restTrialN: REST_TRIAL_N, XXX
+        restTrialN: REST_TRIAL_N,
         stimPath: STIM_PATH,
         dataFile: "pre-post",
         savingScript: SAVING_SCRIPT,

@@ -207,22 +207,22 @@ const MAIN_INSTRUCTIONS_ARRAY = [
     [HIDE_INSTR_IMG,false,"Your job is to trace the blue path with the red dot, as closely as possible.<br /><br />Try it once on the next page! (Note that a sound will be played while you are tracing the path, but you can ignore it for now.)"],
     [false, RUN_TRACING_PRACTICE, ""],
     [HIDE_ALL_BOXES,SHOW_AGAIN_BUTTON_FOR_TRACING_PRACTICE,"Got it?<br />Hit AGAIN if you'd like to give it another try.<br />Otherwise, hit NEXT."],
-    [HIDE_AGAIN_BUTTON,false,"Let's talk about the sound: The clicking sound in the background serves to guide the speed of your cursor movements during the game."],
+    [HIDE_AGAIN_BUTTON,false,"Let's talk about the sound:<br />The clicking sound in the background serves to guide the speed of your cursor movements during the game."],
     [SHOW_RHYTHM_GUIDE,false,"Try your best to control your cursor's speed this way:<br />Reach the peak or valley of the wave at each click. (See the image below.)<br /><br />You will see an example on the next page."],
     [HIDE_INSTR_IMG, SHOW_TEMPO_DEMO, ""],
     [false,false,"Note that on the first click, you should *STAY* at the starting position, and aim to reach the first peak of the wave only at the second click."],
     [false,SHOW_AGAIN_BUTTON_FOR_TEMPO_DEMO,"Does this make sense?<br />You can watch the example again by clicking AGAIN.<br />Otherwise, click NEXT to try it once yourself!"],
     [HIDE_AGAIN_BUTTON, RUN_TRACING_PRACTICE, ""],
-    [HIDE_ALL_BOXES,false,"As you may have noticed, it is not exactly easy on the first try. Since it is VERY important that you trace the path in the specified speed as accurately as possible, you will practice this a few times before we continue the explanation for the game."],
-    [BIND_TEMPO_PRACTICE_BLOCK,false,"During the practice, you will see a score after each try, which indicates how much your trace deviates from the path and the tempo. Your goal is to complete 20 practice games and reach above 60% 4 times in a row after. Of course, I will be glad if you aim at 100%!<br /><br />Hit SPACE to start!"],
+    [HIDE_ALL_BOXES,false,"As you may have noticed, it is not exactly easy on the first try.<br /><br />Since it is VERY important that you trace the path in the specified speed as accurately as possible, you will practice this a few times before we continue the explanation for the game."],
+    [BIND_TEMPO_PRACTICE_BLOCK,false,"During the practice, you will see a score after each try, which indicates how much your trace deviates from the path and the tempo.<br /><br />Your goal is to complete 20 practice games and reach above 60% 4 times in a row after. Of course, I will be glad if you aim at 100%!<br /><br />Hit SPACE to start!"],
     [false,false,"You've passed! Good job!<br /><br />Now that you are doing so well, in the actual game, I'll add a hard limit on how much you can deviate from the ideal path and speed:<br />The game will be interrupted by a warning if you stray too far, and you will have to repeat that particular game later. So keep up the good work!"],
-    [false,false,"In the actual game, there will be a yellow dot at the end of the path, which moves during the games. In each game, it may stay static, appear to be pushed away, or move away on its own to avoid contact with the red dot. Whichever happens, your job is to remain calm and carry on."],
-    [false,false,"Now here's one last trick for the formal games: Sometimes, the red dot will *NOT* be following your cursor movements, but moving along a path from a prerecorded game of others."],
+    [false,false,"In the actual game, there will be a yellow dot at the end of the path, which moves during the games.<br /><br />In each game, it may stay static, appear to be pushed away, or move away on its own to avoid contact with the red dot.<br /><br />Whichever happens, your job is to remain calm and carry on."],
+    [false,false,"Now here's one last trick for the formal games:<br />Sometimes, the red dot will *NOT* be following your cursor movements, but moving along a path from a prerecorded game of others."],
     [false,false,"So after each game, you will be asked to guess whether the red dot was following your cursor movements or a prerecorded path, by pressing Y for yours, and N for not yours.<br /><br />Try it once on the next page!"],
     [false, RUN_FULL_PRACTICE, ""],
     [HIDE_ALL_BOXES,SHOW_AGAIN_BUTTON_FOR_FULL_PRACTICE,"That was a prerecorded path. Can you tell?<br /><br />You can look at it again by clicking AGAIN, or move on by clicking NEXT."],
     [HIDE_AGAIN_BUTTON,false,"Sometimes, you may be relatively confident that the red dot is following your cursor movements or a prerecorded path, sometimes you may not. Either way is completely fine. Just make your best guess."],
-    [false,false,"While there are various strategies you can use to test if the red dot is following your cursor movements (e.g., pausing your movements sometimes to see if the dot pauses as well), please try your best to *NOT* use them intentionally.<br /><br />Just focus on tracing the path at the designated speed. Otherwise, you will likely incur trace deviations and fail the games."]
+    [false,false,"While there are various strategies you can use to test if the red dot is following your cursor movements (e.g., pausing your movements sometimes to see if the dot pauses as well), please try your best to *NOT* use them intentionally.<br /><br />Just focus on tracing the path at the designated speed. Otherwise, you will likely incur trace deviations and fail the games."],
     [false,false,"Okay, now, a quick review:<br />(1) Click on the white dot to start.<br />(2) Trace the blue path following the tempo of the click sound.<br />(3) Make your best guess whether the red dot is following your cursor movements or not."],
     [BIND_START_EXPERIMENT,false,"That's it!<br /><br />Now you may start the formal games by press SPACE!"],
     [false,false,"You are almost done! I need you to play 2 last games with a small change."],
@@ -669,7 +669,7 @@ function TRAIL_UPDATE_BASED_ON_BLOCK_TYPE(trial_obj, this_trial) {
     if (trial_obj.traceType == "other") {
         trial_obj.traceVersion = RAND_CHOICE([0, 1, 2]);
         trial_obj.traceNum = `static${trial_obj.orientation}_${trial_obj.traceVersion}`;
-        // `${trial_obj.triggerType}${trial_obj.orientation}_${trial_obj.otherTraceVersion}` // for formal XXX
+        // `${trial_obj.triggerType}${trial_obj.orientation}_${trial_obj.otherTraceVersion}` // for the experiment with subject's trajectories XXX
         otherTrace = TRACE_DICT[trial_obj.traceNum].slice();
     }
     trial_obj.thisGame = {
@@ -698,6 +698,10 @@ function START_TRIAL(trial_obj) {
     });
 }
 
+function UPDATE_PROGRESS(rest_instr) {
+    return rest_instr.replace('##', trial.progress);
+}
+
 function INTERRUPT() {
     $("body").css("cursor", "default");
     $("#interruption-notice").show();
@@ -720,7 +724,7 @@ function INTERRUPT() {
             $("#task-box"),
             $("#rest-box"),
             $("#rest-text"),
-            REST_INSTRUCTION
+            UPDATE_PROGRESS(REST_INSTRUCTION)
         );
     }, NOTICE_DURATION * 1000);
 }
@@ -738,7 +742,7 @@ function GAME_END() {
             $("#task-box"),
             $("#rest-box"),
             $("#rest-text"),
-            REST_INSTRUCTION
+            UPDATE_PROGRESS(REST_INSTRUCTION)
         );
     }
 }

@@ -378,6 +378,25 @@ function CREATE_RANDOM_REPEAT_BEGINNING_LIST(stim_list, repeat_trial_n) {
     return REPEAT_LIST.concat(stim_list);
 }
 
+function CREATE_EMPTY_2D_ARRAY(rows, columns) {
+    return [...Array(rows).keys()].map(i => Array(columns));
+}
+
+function TRANSPOSE_2D_MATRIX(input_array) {
+    let row_n = input_array.length;
+    let column_n = input_array[0].length;
+    let output_array = CREATE_EMPTY_2D_ARRAY(column_n, row_n);
+    for (let i=0; i<row_n; i++) {
+        if (input_array[i].length != column_n) {
+            return;
+        }
+        for (let j=0; j<column_n; j++) {
+            output_array[j][i] = input_array[i][j];
+        }
+    }
+    return output_array;
+}
+
 function RECURSIVE_COMBINE(current_factor, remain_factor_list, conditions) {
     conditions = REPEAT_ELEMENTS_IN_ARRAY(
         conditions.slice(),

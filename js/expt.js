@@ -355,6 +355,7 @@ class trialObject {
     }
 
     runRestOrEnd(task_box, rest_box, rest_text_element, rest_text) {
+        let that = this;
         this.remainingTrialN = this.trialList.length;
         if (this.remainingTrialN == 0) {
             // end
@@ -365,9 +366,9 @@ class trialObject {
             task_box.hide();
             this.rest(rest_box, rest_text_element, rest_text, function () {
                 task_box.show();
-                this.blockNum += 1;
-                this.restCount += 1;
-                this.run();
+                that.blockNum += 1;
+                that.restCount += 1;
+                that.run();
             });
         } else {
             // run
