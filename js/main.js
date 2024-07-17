@@ -5,27 +5,18 @@ function RUN_STUDY() {
     if (DETECT_METHOD("fromEntries", Object)) {
         LOAD_IMG(0, STIM_PATH, IMG_LIST);
         subj = new subjObject(subj_options);
-        subj.id = subj.getID(ID_GET_VARIABLE_NAME);
         subj.recycledCount = 0;
         subj.recycleReachedMax = false;
         tempo_practice_options["subj"] = subj;
-        tempo_practice_options["dataFile"] =
-            subj.id + "_" + TEMPO_PRACTICE_FILE;
         trial_options["subj"] = subj;
-        trial_options["dataFile"] = subj.id + "_" + TRIAL_FILE;
-        subj.saveVisit();
         if (subj.phone) {
             HALT_EXPERIMENT(
                 "It seems that you are using a touchscreen device or a phone. Please use a laptop or desktop instead.<br /><br />" +
-                    "If you believe you have received this message in error, please contact the experimenter at akadambi@ucla.edu<br /><br />" +
+                    "If you believe you have received this message in error, please contact the experimenter at XXX.<br /><br />" +
                     "Otherwise, please switch to a laptop or a desktop computer for this experiment."
             );
-        } else if (subj.valid_id) {
-            INSTRUCTION_START();
         } else {
-            HALT_EXPERIMENT(
-                "We can't identify a valid ID. Please reopen the study from the sona website again. Thank you!"
-            );
+            INSTRUCTION_START();
         }
     } else {
         HALT_EXPERIMENT(
@@ -53,7 +44,6 @@ const SUBJ_TITLES = [
     "num",
     "date",
     "startTime",
-    "id",
     "userAgent",
     "endTime",
     "duration",
@@ -125,24 +115,14 @@ function SUBMIT_DEBRIEFING_Q() {
     if (choice_dict.device == "other") {
         open_ended_dict.otherDevice = $("#other-device").val();
     }
-    open_ended_dict = APPLY_FUNCTION_TO_OBJ(
-        open_ended_dict,
-        REPLACE_LINE_BREAK_IN_ENTRY_VALUE
-    );
-    if (
-        CHECK_IF_ALL_OBJECT_KEYS_HAVE_DEFINED_VALUE(
-            open_ended_dict,
-            choice_dict
-        )
-    ) {
+    open_ended_dict = APPLY_FUNCTION_TO_OBJ(open_ended_dict, REPLACE_LINE_BREAK_IN_ENTRY_VALUE);
+    if (CHECK_IF_ALL_OBJECT_KEYS_HAVE_DEFINED_VALUE(open_ended_dict, choice_dict)) {
         $("#questions-box").hide();
         open_ended_dict = Object.fromEntries(open_ended_dict);
         Object.assign(subj, choice_dict, open_ended_dict);
         SHOW_MANIPULATION_CHECK_INSTRUCTIONS();
     } else {
-        $("#q-warning").text(
-            "Please answer all questions to continue. Thank you!"
-        );
+        $("#q-warning").text("Please answer all questions to continue. Thank you!");
     }
 }
 
@@ -157,11 +137,10 @@ function SHOW_DEBRIEFING() {
     $("#debriefing-box").show();
     $("html")[0].scrollIntoView();
     $("#end-button").on("click", END_TO_SONA);
-    subj.save();
 }
 
 function END_TO_SONA() {
-    window.location.href = COMPLETION_URL + subj.id;
+    window.location.href = COMPLETION_URL;
 }
 
 function ALLOW_SELECTION() {
@@ -194,8 +173,8 @@ function INSTRUCTION_START() {
 
 // prettier-ignore
 const MAIN_INSTRUCTIONS_ARRAY = [
-    [SHOW_CONSENT,false,'Thank you very much!<br /><br />This study will take about 30 minutes. Please read the instructions carefully, and avoid using the refresh or back buttons.'],
-    [HIDE_CONSENT,false,"We will need to play sounds during the study, so please turn on your speakers or put on your headphones now.<br /><br />If you don't have a sound device, " + 'please contact the experimenter at akadambi@ucla.edu with the phrase "NO-SOUND-DEVICE".'],
+    [false,false,'Thank you very much!<br /><br />This study will take about 30 minutes. Please read the instructions carefully, and avoid using the refresh or back buttons.'],
+    [false,false,"We will need to play sounds during the study, so please turn on your speakers or put on your headphones now.<br /><br />If you don't have a sound device, " + 'please contact the experimenter at XXX with the phrase "NO-SOUND-DEVICE".'],
     [SHOW_SOUND_TEST,false,"Now, please play the calibration sound to adjust the volume. Make sure you can clearly and comfortably hear the sound. Press SPACE when you are done."],
     [false,false,"For this study to work, the webpage will automatically switch to the full-screen view on the next page. Please stay in the full screen mode until the study automatically switches out from it."],
     [SWITCH_TO_FULL_SCREEN,false,"In this study, you will be playing a game."],
@@ -214,7 +193,7 @@ const MAIN_INSTRUCTIONS_ARRAY = [
     [false,SHOW_AGAIN_BUTTON_FOR_TEMPO_DEMO,"Does this make sense?<br />You can watch the example again by clicking AGAIN.<br />Otherwise, click NEXT to try it once yourself!"],
     [HIDE_AGAIN_BUTTON, RUN_TRACING_PRACTICE, ""],
     [HIDE_ALL_BOXES,false,"As you may have noticed, it is not exactly easy on the first try.<br /><br />Since it is VERY important that you trace the path in the specified speed as accurately as possible, you will practice this a few times before we continue the explanation for the game."],
-    [BIND_TEMPO_PRACTICE_BLOCK,false,"During the practice, you will see a score after each try, which indicates how much your trace deviates from the path and the tempo.<br /><br />Your goal is to complete 20 practice games and reach above 60% 4 times in a row after. Of course, I will be glad if you aim at 100%!<br /><br />Hit SPACE to start!"],
+    [BIND_TEMPO_PRACTICE_BLOCK,false,"During the practice, you will see a score after each try, which indicates how much your trace deviates from the path and the tempo.<br /><br />Your goal is to complete 5 practice games and reach above 60% 2 times in a row after. Of course, I will be glad if you aim at 100%!<br /><br />Hit SPACE to start!"],
     [false,false,"You've passed! Good job!<br /><br />Now that you are doing so well, in the actual game, I'll add a hard limit on how much you can deviate from the ideal path and speed:<br />The game will be interrupted by a warning if you stray too far, and you will have to repeat that particular game later. So keep up the good work!"],
     [false,false,"In the actual game, there will be a yellow dot at the end of the path, which moves during the games.<br /><br />In each game, it may stay static, appear to be pushed away, or move away on its own to avoid contact with the red dot.<br /><br />Whichever happens, your job is to remain calm and carry on."],
     [false,false,"Now here's one last trick for the formal games:<br />Sometimes, the red dot will *NOT* be following your cursor movements, but moving along a path from a prerecorded game of others."],
@@ -233,15 +212,6 @@ const MAIN_INSTRUCTIONS_ARRAY = [
 
 const REST_INSTRUCTION =
     "You are done with ##% of the study!<br /><br />Take a short break now and hit space to continue whenever you are ready.";
-
-function SHOW_CONSENT() {
-    $("#consent-box").show();
-}
-
-function HIDE_CONSENT() {
-    $("#consent-box").hide();
-    $("#instr-box").addClass("fixed-box");
-}
 
 function SHOW_INSTR_IMG(file_name) {
     $("#instr-img").attr("src", STIM_PATH + file_name);
@@ -422,8 +392,7 @@ function RUN_MANIPULATION_CHECK_1() {
 function RUN_MANIPULATION_CHECK_2() {
     RESET_MARK_AND_OBJECT();
     game_options["tempo_practice"] = true;
-    game_options["gameEndCallback"] =
-        GO_BACK_TO_MANIPULATION_CHECK_INSTRUCTIONS;
+    game_options["gameEndCallback"] = GO_BACK_TO_MANIPULATION_CHECK_INSTRUCTIONS;
     game = new gameObject(game_options);
     game.canvasOffsetLeft = game.canvasElement.offset().left;
     game.canvasOffsetTop = game.canvasElement.offset().top;
@@ -486,33 +455,22 @@ function SHOW_MANIPULATION_CHECK_QUESTIONS() {
     instr.saveReadingTime();
     $("#instr-box").hide();
     $("#manipulation-check-q-box").show();
-    $("#manipulation-check-q-button").on(
-        "click",
-        SUBMIT_MANIPULATION_CHECK_QUESTIONS
-    );
+    $("#manipulation-check-q-button").on("click", SUBMIT_MANIPULATION_CHECK_QUESTIONS);
 }
 
 function SUBMIT_MANIPULATION_CHECK_QUESTIONS() {
     let choice_dict = {
-        manipulationCheckAlive: $(
-            'input[name="manipulationCheckAlive"]:checked'
-        ).val(),
-        manipulationCheckSocial: $(
-            'input[name="manipulationCheckSocial"]:checked'
-        ).val()
+        manipulationCheckAlive: $('input[name="manipulationCheckAlive"]:checked').val(),
+        manipulationCheckSocial: $('input[name="manipulationCheckSocial"]:checked').val()
     };
     if (CHECK_IF_ALL_OBJECT_KEYS_HAVE_DEFINED_VALUE({}, choice_dict)) {
         $("#manipulation-check-q-box").hide();
         Object.assign(subj, choice_dict);
         subj.instrReadingTimes = JSON.stringify(instr.readingTimes);
-        subj.quickReadingPageN = Object.values(instr.readingTimes).filter(
-            (d) => d < INSTR_READING_TIME_MIN
-        ).length;
+        subj.quickReadingPageN = Object.values(instr.readingTimes).filter((d) => d < INSTR_READING_TIME_MIN).length;
         SHOW_DEBRIEFING();
     } else {
-        $("#manipulation-check-q-warning").text(
-            "Please answer all questions to continue. Thank you!"
-        );
+        $("#manipulation-check-q-warning").text("Please answer all questions to continue. Thank you!");
     }
 }
 
@@ -634,7 +592,6 @@ function RUN_TEMPO_BLOCK() {
 
 function RUN_TASK() {
     $("#task-box").show();
-    subj.saveAttrition();
     game_options["tempo_practice"] = false;
     game_options["gameEndCallback"] = GAME_END;
     game = new gameObject(game_options);
@@ -643,13 +600,7 @@ function RUN_TASK() {
     trial.run();
 }
 
-function TEMPO_PRACTICE_UPDATE(
-    formal_trial,
-    last,
-    this_trial,
-    next_trial,
-    path
-) {
+function TEMPO_PRACTICE_UPDATE(formal_trial, last, this_trial, next_trial, path) {
     TRAIL_UPDATE_BASED_ON_BLOCK_TYPE(tempo_practice, this_trial);
     game.update(tempo_practice.thisGame, false);
 }
@@ -699,7 +650,7 @@ function START_TRIAL(trial_obj) {
 }
 
 function UPDATE_PROGRESS(rest_instr) {
-    return rest_instr.replace('##', trial.progress);
+    return rest_instr.replace("##", trial.progress);
 }
 
 function INTERRUPT() {
@@ -720,12 +671,7 @@ function INTERRUPT() {
             subj.recycleReachedMax = true;
         }
         RECORD_TRIAL_DATA(trial);
-        trial.runRestOrEnd(
-            $("#task-box"),
-            $("#rest-box"),
-            $("#rest-text"),
-            UPDATE_PROGRESS(REST_INSTRUCTION)
-        );
+        trial.runRestOrEnd($("#task-box"), $("#rest-box"), $("#rest-text"), UPDATE_PROGRESS(REST_INSTRUCTION));
     }, NOTICE_DURATION * 1000);
 }
 
@@ -738,12 +684,7 @@ function GAME_END() {
         SHOW_SCORE();
     } else {
         RECORD_TRIAL_DATA(trial);
-        trial.runRestOrEnd(
-            $("#task-box"),
-            $("#rest-box"),
-            $("#rest-text"),
-            UPDATE_PROGRESS(REST_INSTRUCTION)
-        );
+        trial.runRestOrEnd($("#task-box"), $("#rest-box"), $("#rest-text"), UPDATE_PROGRESS(REST_INSTRUCTION));
     }
 }
 
@@ -774,10 +715,7 @@ function RECORD_TRIAL_DATA(trial_obj) {
     trial_obj.recognition = game.recognition;
     trial_obj.recognitionRT = game.recognitionRT;
     if (trial_obj.trialNum > 0) {
-        const DATA_LIST = LIST_FROM_ATTRIBUTE_NAMES(
-            trial_obj,
-            trial_obj.titles
-        );
+        const DATA_LIST = LIST_FROM_ATTRIBUTE_NAMES(trial_obj, trial_obj.titles);
         trial_obj.allData += LIST_TO_FORMATTED_STRING(DATA_LIST);
     }
 }
@@ -795,10 +733,8 @@ function SHOW_SCORE() {
 }
 
 function CALCULATE_TEMPO_SCORE() {
-    let x_score =
-        Math.max(0, 1 - (2 * game.maxDeviationX) / (5 * DEVIATION_LIMIT)) * 100;
-    let y_score =
-        Math.max(0, 1 - (2 * game.maxDeviationY) / (5 * DEVIATION_LIMIT)) * 100;
+    let x_score = Math.max(0, 1 - (2 * game.maxDeviationX) / (5 * DEVIATION_LIMIT)) * 100;
+    let y_score = Math.max(0, 1 - (2 * game.maxDeviationY) / (5 * DEVIATION_LIMIT)) * 100;
     return Math.min(x_score, y_score);
 }
 
@@ -814,8 +750,7 @@ function TEMPO_PRACTICE_RUN_OR_END() {
     $("#practice-score").hide();
     if (CHECK_TEMPO_PRACTICE_END()) {
         tempo_practice.complete = true;
-        subj.tempoPracticeCount =
-            TEMPO_PRACTICE_MAX_TRIAL_N - tempo_practice.remainingTrialN;
+        subj.tempoPracticeCount = TEMPO_PRACTICE_MAX_TRIAL_N - tempo_practice.remainingTrialN;
         tempo_practice.endExptFunc();
     } else {
         tempo_practice.run();
@@ -836,12 +771,10 @@ function CHECK_TEMPO_PRACTICE_END() {
 function END_TEMPO_PRACTICE() {
     $("#task-box").hide();
     $("#next-button").css("display", "block");
-    tempo_practice.save();
     instr.next();
 }
 
 function END_TASK() {
     $("#task-box").hide();
-    trial.save();
     SHOW_DEBRIEFING_QUESTIONS();
 }
