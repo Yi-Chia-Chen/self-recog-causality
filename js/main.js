@@ -12,8 +12,8 @@ function RUN_STUDY() {
         if (subj.phone) {
             HALT_EXPERIMENT(
                 "It seems that you are using a touchscreen device or a phone. Please use a laptop or desktop instead.<br /><br />" +
-                    "If you believe you have received this message in error, please contact the experimenter at XXX.<br /><br />" +
-                    "Otherwise, please switch to a laptop or a desktop computer for this experiment."
+                "If you believe you have received this message in error, please contact the experimenter at XXX.<br /><br />" +
+                "Otherwise, please switch to a laptop or a desktop computer for this experiment."
             );
         } else {
             INSTRUCTION_START();
@@ -173,41 +173,41 @@ function INSTRUCTION_START() {
 
 // prettier-ignore
 const MAIN_INSTRUCTIONS_ARRAY = [
-    [false,false,'Thank you very much!<br /><br />This study will take about 30 minutes. Please read the instructions carefully, and avoid using the refresh or back buttons.'],
-    [false,false,"We will need to play sounds during the study, so please turn on your speakers or put on your headphones now.<br /><br />If you don't have a sound device, " + 'please contact the experimenter at XXX with the phrase "NO-SOUND-DEVICE".'],
-    [SHOW_SOUND_TEST,false,"Now, please play the calibration sound to adjust the volume. Make sure you can clearly and comfortably hear the sound. Press SPACE when you are done."],
-    [false,false,"For this study to work, the webpage will automatically switch to the full-screen view on the next page. Please stay in the full screen mode until the study automatically switches out from it."],
-    [SWITCH_TO_FULL_SCREEN,false,"In this study, you will be playing a game."],
-    [false,false,"Before I explain the details of how to play the game, let me just quickly show you what the game looks like when I play it."],
+    [false, false, 'Thank you very much!<br /><br />This study will take about 10 minutes. Please read the instructions carefully, and avoid using the refresh or back buttons.'],
+    [false, false, "We will need to play sounds during the study, so please turn on your speakers or put on your headphones now.<br /><br />If you don't have a sound device, " + 'please contact the experimenter at XXX with the phrase "NO-SOUND-DEVICE".'],
+    [SHOW_SOUND_TEST, false, "Now, please play the calibration sound to adjust the volume. Make sure you can clearly and comfortably hear the sound. Press SPACE when you are done."],
+    [false, false, "For this study to work, the webpage will automatically switch to the full-screen view on the next page. Please stay in the full screen mode until the study automatically switches out from it."],
+    [SWITCH_TO_FULL_SCREEN, false, "In this study, you will be playing a game."],
+    [false, false, "Before I explain the details of how to play the game, let me just quickly show you what the game looks like when I play it."],
     [false, SHOW_GAME_DEMO, ""],
-    [SHOW_INITIAL_DISPLAY,false,"Now onto the explanations:<br />You will be playing this game multiple times. Each game started with a blue path in the center (see the image below). There is a white dot in the beginning of the path, and a yellow dot at the end of the path."],
-    [SHOW_ARROW_TO_START_DOT,false,"To start each game, you will need to click on the white dot with your cursor to start. After that, your cursor will be replaced by a red dot."],
-    [SHOW_TRACE_DISPLAY,false,"Once the game starts, you will move your mouse to control the red dot.<br /><br />You will *NOT* need to press down any mouse buttons during this! (So just move your mouse, not pressing down and dragging it.)"],
-    [HIDE_INSTR_IMG,false,"Your job is to trace the blue path with the red dot, as closely as possible.<br /><br />Try it once on the next page! (Note that a sound will be played while you are tracing the path, but you can ignore it for now.)"],
+    [SHOW_INITIAL_DISPLAY, false, "Now onto the explanations:<br />You will be playing this game multiple times. Each game started with a blue path in the center (see the image below). There is a white dot in the beginning of the path, and a yellow dot at the end of the path."],
+    [SHOW_ARROW_TO_START_DOT, false, "To start each game, you will need to click on the white dot with your cursor to start. After that, your cursor will be replaced by a red dot."],
+    [SHOW_TRACE_DISPLAY, false, "Once the game starts, you will move your mouse to control the red dot.<br /><br />You will *NOT* need to press down any mouse buttons during this! (So just move your mouse, not pressing down and dragging it.)"],
+    [HIDE_INSTR_IMG, false, "Your job is to trace the blue path with the red dot, as closely as possible.<br /><br />Try it once on the next page! (Note that a sound will be played while you are tracing the path, but you can ignore it for now.)"],
     [false, RUN_TRACING_PRACTICE, ""],
-    [HIDE_ALL_BOXES,SHOW_AGAIN_BUTTON_FOR_TRACING_PRACTICE,"Got it?<br />Hit AGAIN if you'd like to give it another try.<br />Otherwise, hit NEXT."],
-    [HIDE_AGAIN_BUTTON,false,"Let's talk about the sound:<br />The clicking sound in the background serves to guide the speed of your cursor movements during the game."],
-    [SHOW_RHYTHM_GUIDE,false,"Try your best to control your cursor's speed this way:<br />Reach the peak or valley of the wave at each click. (See the image below.)<br /><br />You will see an example on the next page."],
+    [HIDE_ALL_BOXES, SHOW_AGAIN_BUTTON_FOR_TRACING_PRACTICE, "Got it?<br />Hit AGAIN if you'd like to give it another try.<br />Otherwise, hit NEXT."],
+    [HIDE_AGAIN_BUTTON, false, "Let's talk about the sound:<br />The clicking sound in the background serves to guide the speed of your cursor movements during the game."],
+    [SHOW_RHYTHM_GUIDE, false, "Try your best to control your cursor's speed this way:<br />Reach the peak or valley of the wave at each click. (See the image below.)<br /><br />You will see an example on the next page."],
     [HIDE_INSTR_IMG, SHOW_TEMPO_DEMO, ""],
-    [false,false,"Note that on the first click, you should *STAY* at the starting position, and aim to reach the first peak of the wave only at the second click."],
-    [false,SHOW_AGAIN_BUTTON_FOR_TEMPO_DEMO,"Does this make sense?<br />You can watch the example again by clicking AGAIN.<br />Otherwise, click NEXT to try it once yourself!"],
+    [false, false, "Note that on the first click, you should *STAY* at the starting position, and aim to reach the first peak of the wave only at the second click."],
+    [false, SHOW_AGAIN_BUTTON_FOR_TEMPO_DEMO, "Does this make sense?<br />You can watch the example again by clicking AGAIN.<br />Otherwise, click NEXT to try it once yourself!"],
     [HIDE_AGAIN_BUTTON, RUN_TRACING_PRACTICE, ""],
-    [HIDE_ALL_BOXES,false,"As you may have noticed, it is not exactly easy on the first try.<br /><br />Since it is VERY important that you trace the path in the specified speed as accurately as possible, you will practice this a few times before we continue the explanation for the game."],
-    [BIND_TEMPO_PRACTICE_BLOCK,false,"During the practice, you will see a score after each try, which indicates how much your trace deviates from the path and the tempo.<br /><br />Your goal is to complete 5 practice games and reach above 60% 2 times in a row after. Of course, I will be glad if you aim at 100%!<br /><br />Hit SPACE to start!"],
-    [false,false,"You've passed! Good job!<br /><br />Now that you are doing so well, in the actual game, I'll add a hard limit on how much you can deviate from the ideal path and speed:<br />The game will be interrupted by a warning if you stray too far, and you will have to repeat that particular game later. So keep up the good work!"],
-    [false,false,"In the actual game, there will be a yellow dot at the end of the path, which moves during the games.<br /><br />In each game, it may stay static, appear to be pushed away, or move away on its own to avoid contact with the red dot.<br /><br />Whichever happens, your job is to remain calm and carry on."],
-    [false,false,"Now here's one last trick for the formal games:<br />Sometimes, the red dot will *NOT* be following your cursor movements, but moving along a path from a prerecorded game of others."],
-    [false,false,"So after each game, you will be asked to guess whether the red dot was following your cursor movements or a prerecorded path, by pressing Y for yours, and N for not yours.<br /><br />Try it once on the next page!"],
+    [HIDE_ALL_BOXES, false, "As you may have noticed, it is not exactly easy on the first try.<br /><br />Since it is VERY important that you trace the path in the specified speed as accurately as possible, you will practice this a few times before we continue the explanation for the game."],
+    [BIND_TEMPO_PRACTICE_BLOCK, false, "During the practice, you will see a score after each try, which indicates how much your trace deviates from the path and the tempo.<br /><br />Your goal is to complete 5 practice games and reach above 60% 2 times in a row after. Of course, I will be glad if you aim at 100%!<br /><br />Hit SPACE to start!"],
+    [false, false, "You've passed! Good job!<br /><br />Now that you are doing so well, in the actual game, I'll add a hard limit on how much you can deviate from the ideal path and speed:<br />The game will be interrupted by a warning if you stray too far, and you will have to repeat that particular game later. So keep up the good work!"],
+    [false, false, "In the actual game, there will be a yellow dot at the end of the path, which moves during the games.<br /><br />In each game, it may stay static, appear to be pushed away, or move away on its own to avoid contact with the red dot.<br /><br />Whichever happens, your job is to remain calm and carry on."],
+    [false, false, "Now here's one last trick for the formal games:<br />Sometimes, the red dot will *NOT* be following your cursor movements, but moving along a path from a prerecorded game of others."],
+    [false, false, "So after each game, you will be asked to guess whether the red dot was following your cursor movements or a prerecorded path, by pressing Y for yours, and N for not yours.<br /><br />Try it once on the next page!"],
     [false, RUN_FULL_PRACTICE, ""],
-    [HIDE_ALL_BOXES,SHOW_AGAIN_BUTTON_FOR_FULL_PRACTICE,"That was a prerecorded path. Can you tell?<br /><br />You can look at it again by clicking AGAIN, or move on by clicking NEXT."],
-    [HIDE_AGAIN_BUTTON,false,"Sometimes, you may be relatively confident that the red dot is following your cursor movements or a prerecorded path, sometimes you may not. Either way is completely fine. Just make your best guess."],
-    [false,false,"While there are various strategies you can use to test if the red dot is following your cursor movements (e.g., pausing your movements sometimes to see if the dot pauses as well), please try your best to *NOT* use them intentionally.<br /><br />Just focus on tracing the path at the designated speed. Otherwise, you will likely incur trace deviations and fail the games."],
-    [false,false,"Okay, now, a quick review:<br />(1) Click on the white dot to start.<br />(2) Trace the blue path following the tempo of the click sound.<br />(3) Make your best guess whether the red dot is following your cursor movements or not."],
-    [BIND_START_EXPERIMENT,false,"That's it!<br /><br />Now you may start the formal games by press SPACE!"],
-    [false,false,"You are almost done! I need you to play 2 last games with a small change."],
-    [false,false,"This time, I won't be asking you whether the red dot is following your cursor movements or not. It will always follow your cursor."],
-    [BIND_MANIPULATION_CHECK,false,"Instead, please pay attention to your overall impressions of the displays throughout these 2 games. I will ask you 2 quick questions after.<br /><br />Press SPACE to start!"],
-    [BIND_MANIPULATION_CHECK_QUESTIONS,false,"In these 2 games you just played, the yellow dot at the end of the path moved in different ways and that sometimes gives rise to different impressions.<br /><br />Even though you clearly know that it was just a yellow dot on the screen, sometimes you may still have an impression that it appears to be alive or acting socially.<br /><br />On the next page, I am going to ask you two questions about those impressions."]
+    [HIDE_ALL_BOXES, SHOW_AGAIN_BUTTON_FOR_FULL_PRACTICE, "That was a prerecorded path. Can you tell?<br /><br />You can look at it again by clicking AGAIN, or move on by clicking NEXT."],
+    [HIDE_AGAIN_BUTTON, false, "Sometimes, you may be relatively confident that the red dot is following your cursor movements or a prerecorded path, sometimes you may not. Either way is completely fine. Just make your best guess."],
+    [false, false, "While there are various strategies you can use to test if the red dot is following your cursor movements (e.g., pausing your movements sometimes to see if the dot pauses as well), please try your best to *NOT* use them intentionally.<br /><br />Just focus on tracing the path at the designated speed. Otherwise, you will likely incur trace deviations and fail the games."],
+    [false, false, "Okay, now, a quick review:<br />(1) Click on the white dot to start.<br />(2) Trace the blue path following the tempo of the click sound.<br />(3) Make your best guess whether the red dot is following your cursor movements or not."],
+    [BIND_START_EXPERIMENT, false, "That's it!<br /><br />Now you may start the formal games by press SPACE!"],
+    [false, false, "You are almost done! I need you to play 2 last games with a small change."],
+    [false, false, "This time, I won't be asking you whether the red dot is following your cursor movements or not. It will always follow your cursor."],
+    [BIND_MANIPULATION_CHECK, false, "Instead, please pay attention to your overall impressions of the displays throughout these 2 games. I will ask you 2 quick questions after.<br /><br />Press SPACE to start!"],
+    [BIND_MANIPULATION_CHECK_QUESTIONS, false, "In these 2 games you just played, the yellow dot at the end of the path moved in different ways and that sometimes gives rise to different impressions.<br /><br />Even though you clearly know that it was just a yellow dot on the screen, sometimes you may still have an impression that it appears to be alive or acting socially.<br /><br />On the next page, I am going to ask you two questions about those impressions."]
 ];
 
 const REST_INSTRUCTION =
